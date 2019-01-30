@@ -1,5 +1,5 @@
 node_modules/
-.idea/
+webapp/.idea/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

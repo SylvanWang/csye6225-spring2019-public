@@ -12,18 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.travis.yml">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,64 +29,12 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="infrastructure" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="infrastructure" type="462c0819:PsiDirectoryNode" />
-              <item name="aws" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="infrastructure" type="462c0819:PsiDirectoryNode" />
-              <item name="aws" type="462c0819:PsiDirectoryNode" />
-              <item name="cloudformation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="infrastructure" type="462c0819:PsiDirectoryNode" />
-              <item name="aws" type="462c0819:PsiDirectoryNode" />
-              <item name="codedeploy" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="infrastructure" type="462c0819:PsiDirectoryNode" />
-              <item name="aws" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="jmeter" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="csye6225-spring2019" type="b2602c69:ProjectViewProjectNode" />
-              <item name="csye6225-spring2019" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Downloads/CS4550_Assignments-Assignment3" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
@@ -123,15 +60,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1548718298513</updated>
-      <workItem from="1548718300321" duration="434000" />
+      <workItem from="1548718300321" duration="1209000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434000" />
+    <option name="totallyTimeSpent" value="1209000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="67" width="1373" height="873" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24962963" />
@@ -156,10 +94,10 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.travis.yml">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>

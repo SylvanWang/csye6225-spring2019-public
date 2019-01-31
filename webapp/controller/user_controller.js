@@ -1,5 +1,5 @@
 const DB = require('../routes/db');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const basicAuth = require('basic-auth');
 
 function getTime(req, res) {
@@ -7,36 +7,56 @@ function getTime(req, res) {
 }
 
 function createUser(req, res) {
-
-    console.log(req.body);
+  
     var username = req.body.username;
     var password = req.body.password;
 
-    var promise = DB.searchUser(username);
-    promise.then(function(value){
-        if(value){
-            console.log('search success!');
-            return res.status(400).send("User exists");
-        }
-        else{
-            console.log('search fail');
-            var promise = DB.createUser(username,password);
-            promise.then(function(value){
+    var emailCheck = validateEmail(username);
+    var passwordFormatCheck = enforcePassword(password);
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(password, salt);
+    password = hash;
+
+    if(emailCheck) {
+        if (passwordFormatCheck) {
+              var promise = DB.searchUser(username);
+              promise.then(function(value){
                 if(value){
-                    console.log('insert success!');
-                    res.status(200).send(true);
+                  console.log('search success!');
+                  return res.status(400).send("User exists");
                 }
                 else{
-                    console.log('insert fail!');
-                    res.status(200).send(false);
+                  console.log('search fail');
+                  var promise = DB.createUser(username,password);
+                  promise.then(function(value){
+                    if(value){
+                      console.log('insert success!');
+                      res.status(200).send(true);
+                    }
+                    else{
+                      console.log('insert fail!');
+                      res.status(200).send(false);
+                    }
+                  });
                 }
             });
-        }
-    });
+       } else return res.status(400).send("Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12" );
+
+    }
+    else return res.status(400).send("Bad request: username is not an email");
+}
 
 
+function validateEmail(email) {
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
+}
 
-
+function enforcePassword(password) {
+    const passwordRegex = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$@!])\S{6,12}$/;
+    return passwordRegex.test(String(password));
 }
 
 function auth(req, res, next) {

@@ -1,9 +1,10 @@
 var mysql = require('mysql');
+const config = require('../config');
 var pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'rootroot',
-    database: 'csye_6225'
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
 });
 
 var sql = 'SELECT * FROM users';

@@ -7,6 +7,7 @@ function getTime(req, res) {
 }
 
 function createUser(req, res) {
+  
     var username = req.body.username;
     var password = req.body.password;
 
@@ -17,27 +18,36 @@ function createUser(req, res) {
     const salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(password, salt);
     password = hash;
-    var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';
 
     if(emailCheck) {
         if (passwordFormatCheck) {
-        DB.query(sql, function (err, result) {
-            if (err) {
-                console.log('[INSERT ERROR] - ', err.message);
-                return;
-            }
-
-            console.log('--------------------------INSERT----------------------------');
-            console.log(result);
-            res.status(200).send(result);
-            console.log('-----------------------------------------------------------------\n\n');
-        });
-    } else return res.status(400).send("Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12" );
+              var promise = DB.searchUser(username);
+              promise.then(function(value){
+                if(value){
+                  console.log('search success!');
+                  return res.status(400).send("User exists");
+                }
+                else{
+                  console.log('search fail');
+                  var promise = DB.createUser(username,password);
+                  promise.then(function(value){
+                    if(value){
+                      console.log('insert success!');
+                      res.status(200).send(true);
+                    }
+                    else{
+                      console.log('insert fail!');
+                      res.status(200).send(false);
+                    }
+                  });
+                }
+            });
+       } else return res.status(400).send("Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12" );
 
     }
     else return res.status(400).send("Bad request: username is not an email");
-
 }
+
 
 function validateEmail(email) {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -48,7 +58,6 @@ function enforcePassword(password) {
     const passwordRegex = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$@!])\S{6,12}$/;
     return passwordRegex.test(String(password));
 }
-
 
 function auth(req, res, next) {
 
@@ -65,18 +74,30 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
-        let sql = 'SELECT * FROM users WHERE username="' + user[0] + '"';
-        DB.query(sql, function (err, result) {
-            if (err) {
-                console.log('[INSERT ERROR] - ', err.message);
-                return;
-            }
-            if (!result[0])
-                return res.status(400).send("Invalid credentials");;
-            if (result[0].password === user[1])
+        var promise = DB.checkUser(user[0],user[1]);
+        promise.then(function(value){
+            if(value){
+                console.log('search success!');
                 next();
-            else return res.status(400).send("Invalid credentials");
+            }
+            else{
+                console.log('search fail');
+                return res.status(400).send("Invalid credentials");
+            }
         });
+
+        // let sql = 'SELECT * FROM users WHERE username="' + user[0] + '"';
+        // DB.query(sql, function (err, result) {
+        //     if (err) {
+        //         console.log('[INSERT ERROR] - ', err.message);
+        //         return;
+        //     }
+        //     if (!result[0])
+        //         return res.status(400).send("Invalid credentials");;
+        //     if (result[0].password === user[1])
+        //         next();
+        //     else return res.status(400).send("Invalid credentials");
+        // });
     } else {
         return unauthorized(res);
     }

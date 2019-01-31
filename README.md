@@ -3,11 +3,10 @@
 ## Team Information
 
 | Name | NEU ID | Email Address |
-| Yichuan Jiang| 001813365 | jiang.yic@husky.neu.edu |
-| Mengqi Wang|001472783 |wang.mengqi2@husky.neu.edu |
 | Ranran He|001759737 |he.ra@husky.neu.edu |
 | Sihan Zhao|001885132 |zhao.sih@husky.neu.edu |
-
+| Mengqi Wang|001472783 |wang.mengqi2@husky.neu.edu |
+| Yichuan Jiang| 001813365 | jiang.yic@husky.neu.edu |
 ## Technology Stack
 Express Restful API Nodejs
 restful Apt endpoints

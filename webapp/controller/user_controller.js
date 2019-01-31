@@ -1,5 +1,5 @@
 const DB = require('../routes/db');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const basicAuth = require('basic-auth');
 
 function getTime(req, res) {
@@ -7,14 +7,17 @@ function getTime(req, res) {
 }
 
 function createUser(req, res) {
-
     var username = req.body.username;
     var password = req.body.password;
 
-    var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';
-
     var emailCheck = validateEmail(username);
     var passwordFormatCheck = enforcePassword(password);
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(password, salt);
+    password = hash;
+    var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';
 
     if(emailCheck) {
         if (passwordFormatCheck) {

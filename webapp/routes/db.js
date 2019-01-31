@@ -29,6 +29,8 @@ function query(sql, callback) {
         });
     });
 }
+
+
 function createUser(username,password){
     var promise = new Promise(function(resolve){
         var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';

@@ -13,18 +13,39 @@ function createUser(req, res) {
 
     var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';
 
-    DB.query(sql, function (err, result) {
-        if (err) {
-            console.log('[INSERT ERROR] - ', err.message);
-            return;
-        }
+    var emailCheck = validateEmail(username);
+    var passwordFormatCheck = enforcePassword(password);
 
-        console.log('--------------------------INSERT----------------------------');
-        console.log(result);
-        res.status(200).send(result);
-        console.log('-----------------------------------------------------------------\n\n');
-    });
+    if(emailCheck) {
+        if (passwordFormatCheck) {
+        DB.query(sql, function (err, result) {
+            if (err) {
+                console.log('[INSERT ERROR] - ', err.message);
+                return;
+            }
+
+            console.log('--------------------------INSERT----------------------------');
+            console.log(result);
+            res.status(200).send(result);
+            console.log('-----------------------------------------------------------------\n\n');
+        });
+    } else return res.status(400).send("Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12" );
+
+    }
+    else return res.status(400).send("Bad request: username is not an email");
+
 }
+
+function validateEmail(email) {
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
+}
+
+function enforcePassword(password) {
+    const passwordRegex = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$@!])\S{6,12}$/;
+    return passwordRegex.test(String(password));
+}
+
 
 function auth(req, res, next) {
 

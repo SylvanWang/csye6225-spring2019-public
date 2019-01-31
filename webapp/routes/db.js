@@ -47,6 +47,7 @@ function createUser(username,password){
 }
 
 function checkUser(username,password){
+    console.log(username + ' ' + password);
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM users WHERE username="' + username + '" AND password="' + password +'"';
         pool.query(sql, function (err,result) {

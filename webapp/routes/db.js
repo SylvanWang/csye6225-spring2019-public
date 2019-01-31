@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 var mysql = require('mysql');
 const config = require('../config');
 var pool = mysql.createPool({
@@ -20,6 +21,14 @@ pool.query(sql, function (err, result) {
     console.log('------------------------------------------------------------\n\n');
 });
 
+function bcrypthash(password){
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+
+    var hash = bcrypt.hashSync(password, salt);
+    return hash;
+}
+
 function query(sql, callback) {
     pool.getConnection(function (err, connection) {
         // Use the connection
@@ -32,6 +41,7 @@ function query(sql, callback) {
 
 
 function createUser(username,password){
+    password = bcrypthash(password);
     var promise = new Promise(function(resolve){
         var sql = 'INSERT INTO users(username,password) VALUES("' + username + '","' + password + '")';
         pool.query(sql, function (err) {
@@ -49,23 +59,27 @@ function createUser(username,password){
 }
 
 function checkUser(username,password){
+    password = bcrypthash(password);
     console.log(username + ' ' + password);
     var promise = new Promise(function(resolve){
-        var sql = 'SELECT * FROM users WHERE username="' + username + '" AND password="' + password +'"';
+        var sql = 'SELECT * FROM users WHERE username="' + username + '"';
         pool.query(sql, function (err,result) {
-            if (err) {
-                console.log('[SEARCH ERROR] - ', err.message);
-                return;
-            }
+            bcrypt.compare(result[0].password,password).then(function(res){
+                if (err) {
+                    console.log('[SEARCH ERROR] - ', err.message);
+                    return;
+                }
+
             console.log('--------------------------SEARCH----------------------------');
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result[0]){
                 resolve(true);
             }
-            else{
+            else {
                 resolve(false);
             }
+            });
         });
     });
     return promise;
@@ -97,5 +111,6 @@ module.exports = {
     query,
     createUser,
     checkUser,
-    searchUser
+    searchUser,
+    bcrypthash
 };

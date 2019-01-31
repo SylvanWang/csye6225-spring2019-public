@@ -3,5 +3,4 @@ module.exports ={
     'password':'root',
     'user':'root',
     'database':'csye_6225'
-
 };

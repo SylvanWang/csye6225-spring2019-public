@@ -14,10 +14,7 @@ function createUser(req, res) {
     var emailCheck = validateEmail(username);
     var passwordFormatCheck = enforcePassword(password);
 
-    const saltRounds = 10;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    var hash = bcrypt.hashSync(password, salt);
-    password = hash;
+    password = hash(password);
 
     if(emailCheck) {
         if (passwordFormatCheck) {
@@ -48,7 +45,12 @@ function createUser(req, res) {
     else return res.status(400).send("Bad request: username is not an email");
 }
 
-
+function hash(password){
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(password, salt);
+    return hash;
+}
 function validateEmail(email) {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(String(email).toLowerCase());
@@ -74,7 +76,7 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
-        var promise = DB.checkUser(user[0],user[1]);
+        var promise = DB.checkUser(user[0],hash(user[1]));
         promise.then(function(value){
             if(value){
                 console.log('search success!');

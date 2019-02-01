@@ -1,8 +1,63 @@
 const DB = require('../routes/db');
 const basicAuth = require('basic-auth');
+const bcrypt = require('bcryptjs');
+const jwt = require('jwt-simple'); 
 
 function getTime(req, res) {
     res.status(200).send(new Date());
+}
+
+function login(req, res) {
+    let username = req.body.username;
+    let password = req.body.password;
+
+    DB.getPassword(username).then(target => {
+        let encryptedPassword = target;
+
+        isSamePassword(password, encryptedPassword).then(result => {
+            console.log('compare res', result);
+            if (result) {
+                let payload = {
+                    "username": username,
+                    "password": password
+                };
+                let resJson = { 
+                    'authToken': generateToken(payload) 
+                };
+                return res.status(200).send(resJson);
+            } else {
+                return res.status(400).send("Invalid username or password");
+            }
+        })
+    }).catch(e => {
+        return res.status(400).send("Invalid username or password");
+    })    
+}
+
+function generateToken(username) {
+    var payload = { username };
+    var secret = 'cc';
+    var token = jwt.encode(payload, secret);
+    return token;
+}
+
+function getEncrypted(data) {
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(data, salt);
+    return hash;
+}
+
+function isSamePassword(plainPassword, encryptedPassword) {
+    return bcrypt.compare(plainPassword, encryptedPassword).then((resBcrypt) => {
+        if (resBcrypt) {
+            return true;
+        } else {
+            return false;
+        }
+    }).catch(e => {
+        return false;
+    });
 }
 
 function createUser(req, res) {
@@ -61,39 +116,46 @@ function auth(req, res, next) {
         return res.status(401).send("You haven't logged in. Authorization Required.");
     }
 
-    const auth = req.get("authorization");
+    const auth = req.get("Authorization");
+    console.log("auth token is: " + auth);
 
     if (auth) {
-        let user = Buffer.from(auth.split(" ").pop(), "base64").toString("ascii").split(":");
-        if (!user[0])
-            if (!user[1])
-                return unauthorized(res);
+        let payload = jwt.decode(auth, 'cc') || {};
+        let username = payload.username.username || "INVALID";
+        let password = payload.username.password || "INVALID";
 
-        var promise = DB.checkUser(user[0],DB.bcrypthash(user[1]));
-        promise.then(function(value){
-            if(value){
-                console.log('search success!');
-                next();
+
+        console.log('username', username);
+        console.log('password', password);
+
+        if (username == "INVALID" || password == "INVALID") {
+            return unauthorized(res);
+        }
+
+        let sql = 'SELECT * FROM users WHERE username="' + username + '"';
+        DB.query(sql, function (err, result) {
+            if (err) {
+                console.log('[INSERT ERROR] - ', err.message);
+                return;
             }
-            else{
-                console.log('search fail');
+            if (!result[0]) {
+                console.log("WWW>");
                 return res.status(400).send("Invalid credentials");
             }
-        });
 
-        // let sql = 'SELECT * FROM users WHERE username="' + user[0] + '"';
-        // DB.query(sql, function (err, result) {
-        //     if (err) {
-        //         console.log('[INSERT ERROR] - ', err.message);
-        //         return;
-        //     }
-        //     if (!result[0])
-        //         return res.status(400).send("Invalid credentials");;
-        //     if (result[0].password === user[1])
-        //         next();
-        //     else return res.status(400).send("Invalid credentials");
-        // });
+            return isSamePassword(password, result[0].password).then(isSame => {
+                if (isSame)
+                    next();
+                else {
+                    console.log("not match");
+                    return res.status(400).send("Invalid credentials");
+                } 
+                    
+            })
+            
+        });
     } else {
+        console.log("here");
         return unauthorized(res);
     }
 }
@@ -102,5 +164,6 @@ function auth(req, res, next) {
 module.exports = {
     getTime,
     auth,
-    createUser
+    createUser,
+    login
 };

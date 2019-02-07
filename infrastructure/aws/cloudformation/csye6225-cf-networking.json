@@ -1,0 +1,106 @@
+{
+   "AWSTemplateFormatVersion" : "2010-09-09",
+   "Parameters" : {
+       "parameterVPCName" : {
+          "Type" : "String",
+          "Default" : "defalut-vpc-name",
+          "Description" : "vpc name"
+       },
+       "parameterGatewayName" : {
+         "Type" : "String",
+         "Default" : "defalut-gateway-name",
+         "Description" : "gateway name"
+       },
+       "parameterRouteTableName" : {
+         "Type" : "String",
+         "Default" : "defalut-routeTable-name",
+         "Description" : "route ]table name"
+       }
+   },
+   "Resources" : {
+      "VPC" : {
+         "Type" : "AWS::EC2::VPC",
+         "Properties" : {
+            "CidrBlock" : "10.0.0.0/16",
+    	    "EnableDnsSupport" : "false",
+    	    "EnableDnsHostnames" : "false",
+            "InstanceTenancy" : "dedicated",
+            "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ "-", [{"Ref":"AWS::StackName"}, {"Ref":"parameterVPCName"}]] } } ]
+         }
+      },
+      "InternetGateway" : {
+         "Type" : "AWS::EC2::InternetGateway",
+         "Properties" : {
+           "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ "-", [{"Ref":"AWS::StackName"}, {"Ref":"parameterGatewayName"}]] } } ]
+         }
+      },
+      "myLinkGatewayVPC":{
+         "Type" : "AWS::EC2::VPCGatewayAttachment",
+         "Properties" : {
+             "InternetGatewayId" : {"Ref": "InternetGateway"},
+             "VpcId" : {"Ref": "VPC"}
+         }
+      },
+      "Subnet1" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.0.0/24",
+            "AvailabilityZone" : "us-east-1a"
+         }
+      },
+      "Subnet2" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.1.0/24",
+            "AvailabilityZone" : "us-east-1b"
+         }
+      },
+      "Subnet3" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.2.0/24",
+            "AvailabilityZone" : "us-east-1c"
+         }
+      },
+      "RouteTable" : {
+         "Type" : "AWS::EC2::RouteTable",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ "-", [{"Ref":"AWS::StackName"}, {"Ref":"parameterRouteTableName"}]] } } ]
+         }
+      },
+      "SubnetRouteTableAssociation1" : {
+         "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+         "Properties" : {
+            "SubnetId" : { "Ref" : "Subnet1" },
+            "RouteTableId" : { "Ref" : "RouteTable" }
+         }
+      },
+      "SubnetRouteTableAssociation2" : {
+         "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+         "Properties" : {
+            "SubnetId" : { "Ref" : "Subnet2" },
+            "RouteTableId" : { "Ref" : "RouteTable" }
+         }
+      },
+      "SubnetRouteTableAssociation3" : {
+         "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+         "Properties" : {
+            "SubnetId" : { "Ref" : "Subnet3" },
+            "RouteTableId" : { "Ref" : "RouteTable" }
+         }
+      },
+      "Route" : {
+         "Type" : "AWS::EC2::Route",
+         "DependsOn" : "myLinkGatewayVPC",
+         "Properties" : {
+            "RouteTableId" : { "Ref" : "RouteTable" },
+            "DestinationCidrBlock" : "0.0.0.0/0",
+            "GatewayId" : { "Ref" : "InternetGateway" }
+         }
+      }
+   }
+}

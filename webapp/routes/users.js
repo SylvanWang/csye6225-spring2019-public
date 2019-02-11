@@ -10,6 +10,6 @@ router.get('/', user.getTime);
 router.get('/note', user.listNotes);
 router.put('/note', user.updateNote);
 router.get('/note:id', user.getNote);
-router.post('/note', user.createNote);
-router.delete('/note', user.deleteNote);
+router.post('/note:id', user.createNote);
+router.delete('/note:id', user.deleteNote);
 module.exports = router;

@@ -28,7 +28,10 @@ function deleteNote(req, res) {
 
 
 function getTime(req, res) {
-    res.status(200).send(new Date());
+    res.status(200).send({
+        status:200,
+        message:new Date()
+    });
 }
 
 function createUser(req, res) {
@@ -63,10 +66,17 @@ function createUser(req, res) {
                   });
                 }
             });
-       } else return res.status(400).send("Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12" );
-
+       } else return res.status(400).send({
+            status: 400,
+            message: "Bad password: Password has to contain 1. Upper case character 2. Lower case character 3. Numbers from 0-9 4. ON of the Special character $@! 4. Length has to be in 6-12"
+        })
     }
-    else return res.status(400).send("Bad request: username is not an email");
+
+
+    else return res.status(400).send({
+        status: 400,
+        message:"Bad request: username is not an email"
+    });
 }
 
 
@@ -84,7 +94,18 @@ function auth(req, res, next) {
 
     function unauthorized(res) {
         res.set('WWW-Authenticate', 'Basic realm = Input Username & Password');
-        return res.status(401).send("You haven't logged in. Authorization Required.");
+        return res.status(401).send({
+            status:401,
+            message:"You haven't logged in. Authorization Required."
+        });
+    }
+
+    function authorized(res) {
+        res.set('WWW-Authenticate', 'Basic realm = Input Username & Password');
+        return res.status(200).send({
+            status:200,
+            message:"Auth Success."
+        });
     }
 
     const auth = req.get("authorization");
@@ -107,18 +128,8 @@ function auth(req, res, next) {
             }
         });
 
-        // let sql = 'SELECT * FROM users WHERE username="' + user[0] + '"';
-        // DB.query(sql, function (err, result) {
-        //     if (err) {
-        //         console.log('[INSERT ERROR] - ', err.message);
-        //         return;
-        //     }
-        //     if (!result[0])
-        //         return res.status(400).send("Invalid credentials");;
-        //     if (result[0].password === user[1])
-        //         next();
-        //     else return res.status(400).send("Invalid credentials");
-        // });
+
+
     } else {
         return unauthorized(res);
     }

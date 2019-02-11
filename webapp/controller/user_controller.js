@@ -1,6 +1,32 @@
 const DB = require('../routes/db');
 const basicAuth = require('basic-auth');
 
+// For assignment 3
+function listNotes(req, res) {
+   //TODO
+}
+
+
+function updateNote(req, res) {
+    //TODO
+}
+
+function getNote(req, res) {
+    //TODO
+}
+
+function createNote(req, res) {
+    //TODO
+}
+
+function deleteNote(req, res) {
+    //TODO
+}
+
+
+
+
+
 function getTime(req, res) {
     res.status(200).send(new Date());
 }

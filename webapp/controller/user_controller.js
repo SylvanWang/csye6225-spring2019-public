@@ -3,7 +3,8 @@ const basicAuth = require('basic-auth');
 
 // For assignment 3
 function listNotes(req, res) {
-   //TODO
+
+
 }
 
 

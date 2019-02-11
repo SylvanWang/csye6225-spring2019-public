@@ -120,11 +120,15 @@ function auth(req, res, next) {
         promise.then(function(value){
             if(value){
                 console.log('search success!');
+                authorized(res);
                 next();
             }
             else{
                 console.log('search fail');
-                return res.status(400).send("Invalid credentials");
+                return res.status(400).send({
+                    status:400,
+                    message:"Invalid credentials"
+                });
             }
         });
 

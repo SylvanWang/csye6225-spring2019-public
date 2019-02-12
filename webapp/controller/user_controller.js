@@ -188,8 +188,6 @@ module.exports = {
     getTime,
     auth,
     createUser,
-    listNotes,
-    getNote,
     getMyNotes,
     getMyNote
 

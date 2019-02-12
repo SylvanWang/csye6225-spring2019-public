@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 var mysql = require('mysql');
 const config = require('../config');
 var pool = mysql.createPool({
@@ -85,28 +85,6 @@ function checkUser(username,password){
     return promise;
 }
 
-function getPassword(username) {
-    var promise = new Promise(function(resolve){
-        var sql = 'SELECT * FROM users WHERE username="' + username + '"';
-        pool.query(sql, function (err,result) {
-            if (err) {
-                console.log('[SEARCH ERROR] - ', err.message);
-                return;
-            }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
-            if(result[0]){
-                resolve(result[0].password);
-            }
-            else{
-                resolve(false);
-            }
-        });
-    });
-    return promise;
-}
-
 function searchUser(username){
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
@@ -129,11 +107,88 @@ function searchUser(username){
     return promise;
 }
 
+function getIdByUsername(username){
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM users WHERE username="' + username + '"';
+        console.log(sql);
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result[0]){
+                console.log("this is id:"+result[0].id);
+                resolve(result[0].id);
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No id can be found");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+function getNotesById(id){
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM notes WHERE creater_id="' + id + '"';
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                resolve (result);
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No notes belongs to you, please create notes");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+function getNoteByNoteId(id, userId){
+    console.log("fdsafafdafafafaafdafdafdsfag");
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creater_id="' + userId + '"';
+        console.log(sql);
+        console.log("fdsafafdafafafaafdafdafdsfag");
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                resolve (result);
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+
 module.exports = {
     query,
     createUser,
     checkUser,
     searchUser,
-    bcrypthash,
-    getPassword
+    getIdByUsername,
+    getNotesById,
+    getNoteByNoteId,
+    bcrypthash
 };

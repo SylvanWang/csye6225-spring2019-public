@@ -10,7 +10,7 @@ router.get('/a', db.getIdByUsername);
 
 router.get('/note', user.auth, user.getMyNotes);
 //router.put('/note', user.updateNote);
-router.get('/note:id', user.auth,user.getMyNote);
-//router.post('/note:id', user.createNote);
+router.get('/note/:id', user.auth,user.getMyNote);
+router.post('/note:id', user.createNote);
 //router.delete('/note:id', user.deleteNote);
 module.exports = router;

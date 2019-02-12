@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 var mysql = require('mysql');
 const config = require('../config');
+const NoteModel = require('../models/noteModel');
 var pool = mysql.createPool({
     host: config.host,
     user: config.user,
@@ -70,15 +71,15 @@ function checkUser(username,password){
                     return;
                 }
 
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
-            if(result[0]){
-                resolve(true);
-            }
-            else {
-                resolve(false);
-            }
+                console.log('--------------------------SEARCH----------------------------');
+                console.log(result);
+                console.log('-----------------------------------------------------------------\n\n');
+                if(result[0]){
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
+                }
             });
         });
     });
@@ -181,6 +182,24 @@ function getNoteByNoteId(id, userId){
     return promise;
 }
 
+function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'INSERT INTO notes(id, content, title, createdOn, lastUpdatedOn, creater_id) VALUES("' +
+            id + '","' + content + '","' + title + '","' + createdOn + '","' + lastUpdatedOn + '","' + userId + '")';
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[INSERT ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------INSERT----------------------------');
+            console.log(id + " " +  content + " " +  title + " " +  createdOn + " " + lastUpdatedOn + " " + userId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
+
 
 module.exports = {
     query,
@@ -190,5 +209,7 @@ module.exports = {
     getIdByUsername,
     getNotesById,
     getNoteByNoteId,
-    bcrypthash
+    createNote,
+    bcrypthash,
+    NoteModel
 };

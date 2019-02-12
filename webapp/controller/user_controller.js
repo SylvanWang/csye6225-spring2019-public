@@ -2,19 +2,17 @@ const DB = require('../routes/db');
 const basicAuth = require('basic-auth');
 
 // For assignment 3
-function listNotes(req, res) {
-    auth(req, res, getMyNotes(req, res));
-}
-
 function getMyNotes(req, res) {
-    var idPromise = db.getIdByUsername(req.body.username);
+
+    var idPromise = DB.getIdByUsername(req.body.username);
 
     idPromise.then(function(id) {// value is id
-        if(id){
-            var notesPromise = db.getNotesById(id);
+
+        if(id!=null){
+            var notesPromise = DB.getNotesById(id);
 
             notesPromise.then(function(notes) {
-                if(notes){
+                if(notes.size!=0){
                     console.log('search success!');
                     res.status(200).send(true);
                 }
@@ -42,18 +40,15 @@ function updateNote(req, res) {
     //TODO
 }
 
-function getNote(req, res) {
-    auth(req, res, getMyNote(req, res));
-}
 
 function getMyNote(req, res) {
     let id = req.params.id;
     var userId = req.body.id;
-    var notePromise = db.getNoteByNoteId(id, userId);
+    var notePromise = DB.getNoteByNoteId(id, userId);
 
 
     notePromise.then(function (note) {
-        if (note) {
+        if (note.size!=0) {
             console.log('search success!');
             return res.status(200).send({
                 status: 200,

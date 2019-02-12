@@ -110,6 +110,7 @@ function searchUser(username){
 function getIdByUsername(username){
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
+        console.log(sql);
         pool.query(sql, function (err,result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
@@ -119,7 +120,8 @@ function getIdByUsername(username){
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result[0]){
-                return result[0].id;
+                console.log("this is id:"+result[0].id);
+                resolve(result[0].id);
             }
             else{
                 console.log('[SEARCH ERROR] - ', "No id can be found");
@@ -142,7 +144,7 @@ function getNotesById(id){
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result){
-                return result;
+                resolve (result);
             }
             else{
                 console.log('[SEARCH ERROR] - ', "No notes belongs to you, please create notes");
@@ -154,8 +156,11 @@ function getNotesById(id){
 }
 
 function getNoteByNoteId(id, userId){
+    console.log("fdsafafdafafafaafdafdafdsfag");
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creater_id="' + userId + '"';
+        console.log(sql);
+        console.log("fdsafafdafafafaafdafdafdsfag");
         pool.query(sql, function (err,result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
@@ -165,7 +170,7 @@ function getNoteByNoteId(id, userId){
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result){
-                return result;
+                resolve (result);
             }
             else{
                 console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");

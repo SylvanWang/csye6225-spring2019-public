@@ -107,10 +107,83 @@ function searchUser(username){
     return promise;
 }
 
+function getIdByUsername(username){
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM users WHERE username="' + username + '"';
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result[0]){
+                return result[0].id;
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No id can be found");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+function getNotesById(id){
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM notes WHERE creater_id="' + id + '"';
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                return result;
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No notes belongs to you, please create notes");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+function getNoteByNoteId(id, userId){
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creater_id="' + userId + '"';
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                return result;
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+
 module.exports = {
     query,
     createUser,
     checkUser,
     searchUser,
+    getIdByUsername,
+    getNotesById,
+    getNoteByNoteId,
     bcrypthash
 };

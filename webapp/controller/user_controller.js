@@ -3,7 +3,37 @@ const basicAuth = require('basic-auth');
 
 // For assignment 3
 function listNotes(req, res) {
+    auth(req, res, getMyNotes(req, res));
+}
 
+function getMyNotes(req, res) {
+    var idPromise = db.getIdByUsername(req.body.username);
+
+    idPromise.then(function(id) {// value is id
+        if(id){
+            var notesPromise = db.getNotesById(id);
+
+            notesPromise.then(function(notes) {
+                if(notes){
+                    console.log('search success!');
+                    res.status(200).send(true);
+                }
+                else{
+                    console.log('search fail!');
+                    res.status(200).send(false);
+                }}
+            );
+
+        }
+        else{
+            console.log('search fail');
+            return res.status(400).send({
+                status:400,
+                message:"No user id can be got"
+            });
+        }
+
+    });
 
 }
 
@@ -13,7 +43,30 @@ function updateNote(req, res) {
 }
 
 function getNote(req, res) {
-    //TODO
+    auth(req, res, getMyNote(req, res));
+}
+
+function getMyNote(req, res) {
+    let id = req.params.id;
+    var userId = req.body.id;
+    var notePromise = db.getNoteByNoteId(id, userId);
+
+
+    notePromise.then(function (note) {
+        if (note) {
+            console.log('search success!');
+            return res.status(200).send({
+                status: 200,
+                message: note
+            });
+        } else {
+            console.log('search fail');
+            return res.status(400).send({
+                status: 400,
+                message: "no notes with this id can be found"
+            });
+        }
+    });
 }
 
 function createNote(req, res) {
@@ -103,10 +156,7 @@ function auth(req, res, next) {
 
     function authorized(res) {
         res.set('WWW-Authenticate', 'Basic realm = Input Username & Password');
-        return res.status(200).send({
-            status:200,
-            message:"Auth Success."
-        });
+        console.log('auth success!');
     }
 
     const auth = req.get("authorization");
@@ -122,7 +172,7 @@ function auth(req, res, next) {
             if(value){
                 console.log('search success!');
                 authorized(res);
-                next();
+                return next();
             }
             else{
                 console.log('search fail');
@@ -133,8 +183,6 @@ function auth(req, res, next) {
             }
         });
 
-
-
     } else {
         return unauthorized(res);
     }
@@ -144,5 +192,11 @@ function auth(req, res, next) {
 module.exports = {
     getTime,
     auth,
-    createUser
+    createUser,
+    listNotes,
+    getNote,
+    getMyNotes,
+    getMyNote
+
+
 };

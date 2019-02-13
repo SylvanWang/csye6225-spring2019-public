@@ -157,11 +157,9 @@ function getNotesById(id){
 }
 
 function getNoteByNoteId(id, userId){
-    console.log("fdsafafdafafafaafdafdafdsfag");
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creater_id="' + userId + '"';
         console.log(sql);
-        console.log("fdsafafdafafafaafdafdafdsfag");
         pool.query(sql, function (err,result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
@@ -171,7 +169,7 @@ function getNoteByNoteId(id, userId){
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result){
-                resolve (result);
+                resolve (result)
             }
             else{
                 console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");

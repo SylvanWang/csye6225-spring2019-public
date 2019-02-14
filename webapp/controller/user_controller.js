@@ -33,8 +33,37 @@ function getMyNotes(req, res) {
 }
 
 function updateNote(req, res) {
-    //TODO
-}
+let currentDate = (new Date()).toJSON().slice(0, 19).replace(/[-T]/g, ':');
+
+    let noteId = req.params.id;
+    console.log("nodeId: " + noteId);
+
+    if (res.locals !== undefined) {
+        var idPromise = DB.getIdByUsername(res.locals.user);
+        idPromise.then(function (id) {// value is id
+            if (id != null) {
+                var notePromise = DB.updateNoteByNoteId(noteId, 
+                                req.body.content, req.body.title, currentDate, id);
+                console.log("Id: " + id);
+                notePromise.then(function (value) {
+                    console.log(value);
+                    if (value) {
+                        console.log('update success!');
+                        return res.status(200).send({
+                            status: 200,
+                            message: "update successfully"
+                        });
+                    } else {
+                        console.log('update fail');
+                        return res.status(400).send({
+                            status: 400,
+                            message: "no notes with this id can be found"
+                        });
+                    }
+                });
+            }
+        });
+    } }
 
 function getMyNote(req, res) {
 
@@ -226,5 +255,6 @@ module.exports = {
     getMyNotes,
     getMyNote,
     createNote,
+    updateNote,
     deleteNote
 };

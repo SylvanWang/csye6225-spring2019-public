@@ -208,18 +208,34 @@ function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
 
 function deleteNoteByNoteId(id, userId){
     var promise = new Promise(function(resolve){
-        var sql = 'DELETE FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
-        console.log(sql);
-        pool.query(sql, function (err) {
+        var sqlSearch = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
+        var sqlDelete = 'DELETE FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
+
+        pool.query(sqlSearch, function (err,result) {
             if (err) {
-                console.log('[DELETE ERROR] - ', err.message);
+                console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------DELETE----------------------------');
-            console.log(id + " " + userId);
-            console.log('-----------------------------------------------------------------\n\n');
-            resolve(true);
+            if(result[0]){
+                pool.query(sqlDelete, function (err) {
+                    if (err) {
+                        console.log('[DELETE ERROR] - ', err.message);
+                        return;
+                    }
+                    console.log('--------------------------DELETE----------------------------');
+                    console.log(id + " " + userId);
+                    console.log('-----------------------------------------------------------------\n\n');
+                    resolve(true);
+                });
+            }
+            else{
+                resolve(false);
+                console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");
+                return;
+            }
         });
+
+
     });
     return promise;
 }

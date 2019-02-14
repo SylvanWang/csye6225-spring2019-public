@@ -175,10 +175,10 @@ function createUser(req, res) {
                     promise.then(function (value) {
                         if (value) {
                             console.log('insert success!');
-                            res.status(200).send(true);
+                            res.status(200).send({status: 200, message: "User created"});
                         } else {
                             console.log('insert fail!');
-                            res.status(200).send(false);
+                            res.status(200).send({status: 200, message:"Failed to create user"});
                         }
                     });
                 }

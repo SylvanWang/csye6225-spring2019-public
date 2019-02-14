@@ -217,6 +217,24 @@ function deleteNoteByNoteId(id, userId){
     return promise;
 }
 
+function updateNoteByNoteId(id, content, title, lastUpdatedOn, userId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'UPDATE notes SET content="' + content + '", title ="' + title + '", lastUpdatedOn = "' + lastUpdatedOn
+                   + '" WHERE id="' + id + '" AND creator_id="' + userId + '"';  
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[UPDATE ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------UPDATE----------------------------');
+            console.log(id + " " +  content + " " +  title + " " + lastUpdatedOn + " " + userId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
+
 module.exports = {
     query,
     createUser,
@@ -228,5 +246,6 @@ module.exports = {
     createNote,
     bcrypthash,
     deleteNoteByNoteId,
+    updateNoteByNoteId,
     NoteModel
 };

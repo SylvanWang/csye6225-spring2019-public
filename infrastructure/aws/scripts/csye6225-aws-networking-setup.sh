@@ -21,7 +21,7 @@ port80CidrBlock="0.0.0.0/0"
 
 # Create VPC
 echo "Creating VPC..."
-vpcId=$(aws ec2 create-vpc --cidr-block "$vpcCidrBlock" | jq '.Vpc.VpcId' | tr -d '"')
+vpcId=$(aws ec2 create-vp --cidr-block "$vpcCidrBlock" | jq '.Vpc.VpcId' | tr -d '"')
 
 if [ "$vpcId" ]
 then 

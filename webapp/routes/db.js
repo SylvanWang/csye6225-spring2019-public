@@ -62,14 +62,22 @@ function checkUser(username,password){
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
         pool.query(sql, function (err,result) {
-            if(bcrypt.compareSync(password,result[0].password)){
+            if(result[0]){
+                if(bcrypt.compareSync(password,result[0].password)){
 
-                console.log('--------------------------SEARCH----------------------------');
-                console.log(result);
-                console.log('-----------------------------------------------------------------\n\n');
+                    console.log('--------------------------SEARCH----------------------------');
+                    console.log(result);
+                    console.log('-----------------------------------------------------------------\n\n');
 
-                resolve(true);
+                    resolve(true);
 
+
+                } else {
+                    console.log('[SEARCH ERROR] - ', "Auth failed");
+                    resolve(false);
+                    return;
+
+                }
 
             } else {
                 console.log('[SEARCH ERROR] - ', "Auth failed");
@@ -77,6 +85,7 @@ function checkUser(username,password){
                 return;
 
             }
+
 
 
             });

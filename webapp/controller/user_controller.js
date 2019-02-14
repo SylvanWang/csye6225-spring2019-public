@@ -226,7 +226,7 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
-        var promise = DB.checkUser(user[0], DB.bcrypthash(user[1]));
+        var promise = DB.checkUser(user[0], user[1]);
         promise.then(function (value) {
             if (value) {
                 console.log('search success!');

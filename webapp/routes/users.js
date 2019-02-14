@@ -9,8 +9,8 @@ router.get('/', user.getTime);
 router.get('/a', db.getIdByUsername);
 
 router.get('/note', user.auth, user.getMyNotes);
-router.put('/note/:id', user.updateNote);
-router.get('/note/:id', user.auth,user.getMyNote);
-router.post('/note', user.createNote);
-router.delete('/note/:id', user.deleteNote);
+router.put('/note/:id', user.auth, user.updateNote);
+router.get('/note/:id', user.auth, user.getMyNote);
+router.post('/note', user.auth, user.createNote);
+router.delete('/note/:id', user.auth, user.deleteNote);
 module.exports = router;

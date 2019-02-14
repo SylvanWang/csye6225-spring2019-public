@@ -25,8 +25,7 @@ pool.query(sql, function (err, result) {
 function bcrypthash(password){
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-
-    var hash = bcrypt.hashSync(password, salt);
+    var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(saltRounds));
     return hash;
 }
 
@@ -59,29 +58,30 @@ function createUser(username,password){
 }
 
 function checkUser(username,password){
-    password = bcrypthash(password);
     console.log(username + ' ' + password);
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
         pool.query(sql, function (err,result) {
-            bcrypt.compare(result[0].password,password).then(function(res){
-                if (err) {
-                    console.log('[SEARCH ERROR] - ', err.message);
-                    return;
-                }
+            if(bcrypt.compareSync(password,result[0].password)){
 
                 console.log('--------------------------SEARCH----------------------------');
                 console.log(result);
                 console.log('-----------------------------------------------------------------\n\n');
-                if(result[0]){
-                    resolve(true);
-                }
-                else {
-                    resolve(false);
-                }
+
+                resolve(true);
+
+
+            } else {
+                console.log('[SEARCH ERROR] - ', "Auth failed");
+                resolve(false);
+                return;
+
+            }
+
+
             });
         });
-    });
+
     return promise;
 }
 
@@ -156,11 +156,9 @@ function getNotesById(id){
 }
 
 function getNoteByNoteId(id, userId){
-    console.log("fdsafafdafafafaafdafdafdsfag");
     var promise = new Promise(function(resolve){
         var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
         console.log(sql);
-        console.log("fdsafafdafafafaafdafdafdsfag");
         pool.query(sql, function (err,result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
@@ -170,7 +168,7 @@ function getNoteByNoteId(id, userId){
             console.log(result);
             console.log('-----------------------------------------------------------------\n\n');
             if(result){
-                resolve (result);
+                resolve (result)
             }
             else{
                 console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");

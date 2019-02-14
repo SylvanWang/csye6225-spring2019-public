@@ -1,6 +1,6 @@
 module.exports ={
     'host':'localhost',
-    'password':'password',
+    'password':'root',
     'user':'root',
     'database':'csye_6225'
 };

@@ -175,10 +175,10 @@ function createUser(req, res) {
                     promise.then(function (value) {
                         if (value) {
                             console.log('insert success!');
-                            res.status(200).send(true);
+                            res.status(200).send({status: 200, message: "User created"});
                         } else {
                             console.log('insert fail!');
-                            res.status(200).send(false);
+                            res.status(400).send({status: 400, message:"Failed to create user"});
                         }
                     });
                 }
@@ -226,7 +226,7 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
-        var promise = DB.checkUser(user[0], DB.bcrypthash(user[1]));
+        var promise = DB.checkUser(user[0], user[1]);
         promise.then(function (value) {
             if (value) {
                 console.log('search success!');

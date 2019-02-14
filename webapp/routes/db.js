@@ -40,7 +40,6 @@ function query(sql, callback) {
     });
 }
 
-
 function createUser(username,password){
     password = bcrypthash(password);
     var promise = new Promise(function(resolve){
@@ -135,7 +134,7 @@ function getIdByUsername(username){
 
 function getNotesById(id){
     var promise = new Promise(function(resolve){
-        var sql = 'SELECT * FROM notes WHERE creater_id="' + id + '"';
+        var sql = 'SELECT * FROM notes WHERE creator_id="' + id + '"';
         pool.query(sql, function (err,result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
@@ -158,7 +157,7 @@ function getNotesById(id){
 
 function getNoteByNoteId(id, userId){
     var promise = new Promise(function(resolve){
-        var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creater_id="' + userId + '"';
+        var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
         console.log(sql);
         pool.query(sql, function (err,result) {
             if (err) {
@@ -182,7 +181,7 @@ function getNoteByNoteId(id, userId){
 
 function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
     var promise = new Promise(function(resolve){
-        var sql = 'INSERT INTO notes(id, content, title, createdOn, lastUpdatedOn, creater_id) VALUES("' +
+        var sql = 'INSERT INTO notes(id, content, title, createdOn, lastUpdatedOn, creator_id) VALUES("' +
             id + '","' + content + '","' + title + '","' + createdOn + '","' + lastUpdatedOn + '","' + userId + '")';
         pool.query(sql, function (err) {
             if (err) {
@@ -198,6 +197,41 @@ function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
     return promise;
 }
 
+function deleteNoteByNoteId(id, userId){
+    var promise = new Promise(function(resolve){
+        var sql = 'DELETE FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
+        console.log(sql);
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[DELETE ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------DELETE----------------------------');
+            console.log(id + " " + userId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
+
+function updateNoteByNoteId(id, content, title, lastUpdatedOn, userId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'UPDATE notes SET content="' + content + '", title ="' + title + '", lastUpdatedOn = "' + lastUpdatedOn
+                   + '" WHERE id="' + id + '" AND creator_id="' + userId + '"';  
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[UPDATE ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------UPDATE----------------------------');
+            console.log(id + " " +  content + " " +  title + " " + lastUpdatedOn + " " + userId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
 
 module.exports = {
     query,
@@ -209,5 +243,7 @@ module.exports = {
     getNoteByNoteId,
     createNote,
     bcrypthash,
+    deleteNoteByNoteId,
+    updateNoteByNoteId,
     NoteModel
 };

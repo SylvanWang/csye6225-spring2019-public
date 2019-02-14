@@ -178,7 +178,7 @@ function createUser(req, res) {
                             res.status(200).send({status: 200, message: "User created"});
                         } else {
                             console.log('insert fail!');
-                            res.status(200).send({status: 200, message:"Failed to create user"});
+                            res.status(400).send({status: 400, message:"Failed to create user"});
                         }
                     });
                 }

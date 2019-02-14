@@ -32,11 +32,9 @@ function getMyNotes(req, res) {
     }
 }
 
-
 function updateNote(req, res) {
     //TODO
 }
-
 
 function getMyNote(req, res) {
 
@@ -89,9 +87,35 @@ function createNote(req, res) {
 }
 
 function deleteNote(req, res) {
-    //TODO
-}
+    let noteId = req.params.id;
+    console.log("nodeId: " + noteId);
 
+    if (res.locals !== undefined) {
+        var idPromise = DB.getIdByUsername(res.locals.user);
+        idPromise.then(function (id) {// value is id
+            if (id != null) {
+                var notePromise = DB.deleteNoteByNoteId(noteId, id);
+                console.log("Id: " + id);
+                notePromise.then(function (value) {
+                    console.log(value);
+                    if (value) {
+                        console.log('delete success!');
+                        return res.status(200).send({
+                            status: 200,
+                            message: "delete successfully"
+                        });
+                    } else {
+                        console.log('delete fail');
+                        return res.status(400).send({
+                            status: 400,
+                            message: "no notes with this id can be found"
+                        });
+                    }
+                });
+            }
+        });
+    }
+}
 
 function getTime(req, res) {
     res.status(200).send({
@@ -139,7 +163,6 @@ function createUser(req, res) {
         message: "Bad request: username is not an email"
     });
 }
-
 
 function validateEmail(email) {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -202,5 +225,6 @@ module.exports = {
     createUser,
     getMyNotes,
     getMyNote,
-    createNote
+    createNote,
+    deleteNote
 };

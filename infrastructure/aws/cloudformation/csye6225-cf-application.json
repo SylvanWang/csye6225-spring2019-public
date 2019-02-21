@@ -9,7 +9,7 @@
          	"SecurityGroupIds" :[{"Fn::GetAtt" : ["csye6225webapp","GroupId"]}],
          	"BlockDeviceMappings": [
                {
-                  "DeviceName" : "/dev/sdm",
+                  "DeviceName" : "/dev/sda1",
                   "Ebs" : {
 	                "VolumeType" : "gp2",
                     "VolumeSize" : "20"

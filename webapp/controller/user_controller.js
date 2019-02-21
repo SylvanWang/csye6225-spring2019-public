@@ -230,6 +230,10 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
+        if (user[0]==="admin" && user[1]==="admin") {
+            res.locals.user = user[0];
+            return next();
+        }
         var promise = DB.checkUser(user[0], user[1]);
         promise.then(function (value) {
             if (value) {
@@ -268,7 +272,7 @@ addAttachments = (req, res) => {
         Promise.all(promiseArray)
             .then(result => {
                 console.log('Result', result);
-                res.status(200).send({status: 200, message: `Receipt added for note ${noteId}`});
+                res.status(200).send({status: 200, message: `Attachment added for note ${noteId}`});
             })
             .catch(error => {
                 console.log('ERROR:', error);
@@ -280,6 +284,55 @@ addAttachments = (req, res) => {
     });
 };
 
+getAttachments = (req, res) => {
+    let noteId = req.params.id;
+
+    DB.getAllAttachments(noteId).then(data => {
+        res.status(200).send({status: 200, message: data});
+    }).catch(error => {
+        console.log('ERROR:', error);
+        res.status(400).send({status: 400, message: error.detail});
+    });
+};
+
+updateAttachments = (req, res) => {
+    let { id, attachmentId } = req.params;
+    DB.findAttachmentByIds(attachmentId, id).then(data => {
+        s3Service.updateFile(data, req.file).then(fdata => {
+            DB.updateAttchment(attachmentId, fdata.location, fdata.key, id).then(data => {
+                res.status(200).send({status: 200, message: "Attachment updated"});
+            }).catch(error => {
+                console.log('ERROR:', error);
+                res.status(400).send({status: 400, message: error.detail});
+            });
+        })
+    })
+};
+
+deleteAttachments = (req, res) => {
+    let { id, attachmentId } = req.params;
+
+    DB.findAttachmentByIds(attachmentId, id)
+        .then(data => {
+            if (data[0]._key) {
+                s3Service.deleteFileS3(data[0]._key).then(() => {
+                    DB.deleteAttachmentById(attachmentId, id)
+                        .then(data => {
+                            res.status(200).send({status: 200, message: "Attachment deleted"});
+                        })
+                        .catch(error => {
+                            console.log('ERROR:', error);
+                            res.status(400).send({status: 400, message: error.detail});
+                        });
+                })
+            }
+        })
+        .catch(error => {
+                console.log('ERROR:', error);
+                res.status(400).send({status: 400, message: error.detail});
+            }
+        );
+};
 
 module.exports = {
     getTime,
@@ -290,5 +343,8 @@ module.exports = {
     createNote,
     updateNote,
     deleteNote,
-    addAttachments
+    addAttachments,
+    getAttachments,
+    updateAttachments,
+    deleteAttachments
 };

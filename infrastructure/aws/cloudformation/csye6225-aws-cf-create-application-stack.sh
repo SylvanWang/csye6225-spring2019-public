@@ -28,7 +28,7 @@ then
                         ParameterKey=publicSubnetId1,ParameterValue=$publicSubnetId1 \
                         ParameterKey=privateSubnetId1,ParameterValue=$privateSubnetId1 \
                         ParameterKey=privateSubnetId2,ParameterValue=$privateSubnetId2 \
-                        ParameterKey=DBport,ParameterValue="5432"\
+                        ParameterKey=DBport,ParameterValue="3306"\
                         ParameterKey=DomainName,ParameterValue=$domainName;
             aws cloudformation wait stack-create-complete --stack-name $1)
 

@@ -295,44 +295,6 @@ getAttachments = (req, res) => {
     });
 };
 
-updateAttachments = (req, res) => {
-    let { id, attachmentId } = req.params;
-    DB.findAttachmentByIds(attachmentId, id).then(data => {
-        s3Service.updateFile(data, req.file).then(fdata => {
-            DB.updateAttchment(attachmentId, fdata.location, fdata.key, id).then(data => {
-                res.status(200).send({status: 200, message: "Attachment updated"});
-            }).catch(error => {
-                console.log('ERROR:', error);
-                res.status(400).send({status: 400, message: error.detail});
-            });
-        })
-    })
-};
-
-deleteAttachments = (req, res) => {
-    let { id, attachmentId } = req.params;
-
-    DB.findAttachmentByIds(attachmentId, id)
-        .then(data => {
-            if (data[0]._key) {
-                s3Service.deleteFileS3(data[0]._key).then(() => {
-                    DB.deleteAttachmentById(attachmentId, id)
-                        .then(data => {
-                            res.status(200).send({status: 200, message: "Attachment deleted"});
-                        })
-                        .catch(error => {
-                            console.log('ERROR:', error);
-                            res.status(400).send({status: 400, message: error.detail});
-                        });
-                })
-            }
-        })
-        .catch(error => {
-                console.log('ERROR:', error);
-                res.status(400).send({status: 400, message: error.detail});
-            }
-        );
-};
 
 module.exports = {
     getTime,

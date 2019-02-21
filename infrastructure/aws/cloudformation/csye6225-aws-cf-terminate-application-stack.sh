@@ -9,7 +9,7 @@ rm temp
 domainName=$(aws route53 list-hosted-zones | jq '.HostedZones[0].Name' | tr -d '"')
 echo $domainName
 
-domainName+="csye6225.com"
+domainName=$domainName"csye6225.com";
 echo $domainName
 
 $(aws s3 rm s3://$domainName --recursive)

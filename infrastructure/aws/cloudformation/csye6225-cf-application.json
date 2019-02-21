@@ -4,6 +4,7 @@
       "myEC2":{
          "Type" : "AWS::EC2::Instance",
          "Properties" : {
+            "KeyName" : "csye6225",
          	"SubnetId":{"Ref":"publicSubnetId1"},
          	"SecurityGroupIds" :[{"Fn::GetAtt" : ["csye6225webapp","GroupId"]}],
          	"BlockDeviceMappings": [
@@ -16,7 +17,7 @@
                }
             ],
             "DisableApiTermination" : "false",
-            "ImageId" : "ami-9887c6e7",
+            "ImageId" : {"Ref" :  "imageId"},
             "InstanceType" : "t2.micro"
          }
       },
@@ -67,20 +68,20 @@
           "Type" : "AWS::RDS::DBSubnetGroup",
           "Properties" : {
             "DBSubnetGroupDescription" : "Database subnet group for RDS instance",
-            "DBSubnetGroupName" : "mydbsubnetgroup",
+            "DBSubnetGroupName" : "Subnet for RDS instances",
             "SubnetIds" : [ {"Ref": "privateSubnetId1"}, {"Ref": "privateSubnetId2"} ]
           }
       },
       "myRDSInstance" : {
           "Type" : "AWS::RDS::DBInstance",
           "Properties" : {
-              "Engine" : "Postgres",
+              "Engine" : "MySQL",
               "DBInstanceClass" : "db.t2.medium",
               "MultiAZ" : "false",
               "DBInstanceIdentifier" : {"Ref" : "DBInstanceIdentifier"},
               "MasterUsername" : {"Ref" : "DBUser"},
               "MasterUserPassword" : { "Ref" : "DBPassword"},
-              "DBSubnetGroupName" : "mydbsubnetgroup",
+              "DBSubnetGroupName" : "Subnet for RDS instances",
               "PubliclyAccessible" : "false",
               "DBName" : { "Ref" : "DBName" },
               "VPCSecurityGroups" : [{ "Ref" : "csye6225rds"}],
@@ -113,6 +114,10 @@
        }
    },
    "Parameters" : {
+       "imageId" : {
+         "Type" : "String",
+         "Default" : "default-image-id"
+       },
        "publicSubnetId1" : {
           "Type" : "String",
           "Default" : "default-subnet-id"

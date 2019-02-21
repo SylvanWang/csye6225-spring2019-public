@@ -2,6 +2,10 @@ const DB = require('../routes/db');
 const uuid = require('uuid/v1');
 const basicAuth = require('basic-auth');
 
+const s3Service = require('../service/aws_service');
+const awsService = require('../service/aws_service');
+const Op = require('sequelize').Op;
+
 // For assignment 3
 function getMyNotes(req, res) {
     if (res.locals !== undefined) {
@@ -247,6 +251,35 @@ function auth(req, res, next) {
     }
 }
 
+addAttachments = (req, res) => {
+    console.log("nodeId: ");
+    console.log("nodeId: " + req.params.id);
+
+    let noteId = req.params.id;
+    console.log("req: " + req.files);
+
+    s3Service.getFileData(req.files).then(data => {
+        console.log("-------------------------------------------");
+        console.log(data);
+        let promiseArray = data.map(p => {
+            return DB.createAttachment(uuid(), p.location, p.key, noteId);
+        });
+
+        Promise.all(promiseArray)
+            .then(result => {
+                console.log('Result', result);
+                res.status(200).send({status: 200, message: `Receipt added for note ${noteId}`});
+            })
+            .catch(error => {
+                console.log('ERROR:', error);
+                res.status(400).send({status: 400, message: error.detail});
+            });
+    }).catch(err => {
+        console.log(err);
+        res.status(400).send({status: 400, message: err.detail});
+    });
+};
+
 
 module.exports = {
     getTime,
@@ -256,5 +289,6 @@ module.exports = {
     getMyNote,
     createNote,
     updateNote,
-    deleteNote
+    deleteNote,
+    addAttachments
 };

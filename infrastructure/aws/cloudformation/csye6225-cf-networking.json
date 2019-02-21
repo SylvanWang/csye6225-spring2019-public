@@ -22,8 +22,8 @@
          "Type" : "AWS::EC2::VPC",
          "Properties" : {
             "CidrBlock" : "10.0.0.0/16",
-          "EnableDnsSupport" : "false",
-          "EnableDnsHostnames" : "false",
+          "EnableDnsSupport" : "true",
+          "EnableDnsHostnames" : "true",
             "InstanceTenancy" : "default",
             "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ "-", [{"Ref":"AWS::StackName"}, {"Ref":"parameterVPCName"}]] } } ]
          }
@@ -46,7 +46,8 @@
          "Properties" : {
             "VpcId" : { "Ref" : "myVPC" },
             "CidrBlock" : "10.0.0.0/24",
-            "AvailabilityZone" : "us-east-1a"
+            "AvailabilityZone" : "us-east-1a",
+            "MapPublicIpOnLaunch": "true"
          }
       },
       "myPrivateSubnet1" : {

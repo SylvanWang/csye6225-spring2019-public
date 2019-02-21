@@ -277,6 +277,105 @@ function createAttachment(id, url, key, noteId) {
     return promise;
 }
 
+function getAllAttachments(id) {
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM attachments WHERE noteId="' + id + '"';
+        console.log(sql);
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                resolve (result)
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No attachments can be found with this note id");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+
+function findAttachmentByIds(id, noteId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
+        console.log(sql);
+        pool.query(sql, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------SEARCH----------------------------');
+            console.log(result);
+            console.log('-----------------------------------------------------------------\n\n');
+            if(result){
+                resolve (result)
+            }
+            else{
+                console.log('[SEARCH ERROR] - ', "No attachment can be found with these ids");
+                return;
+            }
+        });
+    });
+    return promise;
+}
+function updateAttchment(id, url, key, noteId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'UPDATE attachments SET url="' + url + '", _key ="' + key
+            + '" WHERE id="' + id + '" AND noteId="' + noteId + '"';
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[UPDATE ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------UPDATE----------------------------');
+            console.log(id + " " +  url + " " +  key + " " + noteId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
+
+function deleteAttachmentById(id, noteId){
+    var promise = new Promise(function(resolve){
+        var sqlSearch = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
+        var sqlDelete = 'DELETE FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
+
+        pool.query(sqlSearch, function (err,result) {
+            if (err) {
+                console.log('[SEARCH ERROR] - ', err.message);
+                return;
+            }
+            if(result[0]){
+                pool.query(sqlDelete, function (err) {
+                    if (err) {
+                        console.log('[DELETE ERROR] - ', err.message);
+                        return;
+                    }
+                    console.log('--------------------------DELETE----------------------------');
+                    console.log(id + " " + noteId);
+                    console.log('-----------------------------------------------------------------\n\n');
+                    resolve(true);
+                });
+            }
+            else{
+                resolve(false);
+                console.log('[SEARCH ERROR] - ', "No notes can be found with this note id");
+                return;
+            }
+        });
+
+
+    });
+    return promise;
+}
+
 module.exports = {
     query,
     createUser,
@@ -289,5 +388,9 @@ module.exports = {
     bcrypthash,
     deleteNoteByNoteId,
     updateNoteByNoteId,
-    createAttachment
+    createAttachment,
+    getAllAttachments,
+    updateAttchment,
+    findAttachmentByIds,
+    deleteAttachmentById
 };

@@ -296,7 +296,45 @@ deleteAttachments = (req, res) => {
         );
 };
 
+addAttachments = (req, res) => {
+    console.log("nodeId: ");
+    console.log("nodeId: " + req.params.id);
 
+    let noteId = req.params.id;
+    console.log("req: " + req.files);
+
+    s3Service.getFileData(req.files).then(data => {
+        console.log("-------------------------------------------");
+        console.log(data);
+        let promiseArray = data.map(p => {
+            return DB.createAttachment(uuid(), p.location, p.key, noteId);
+        });
+
+        Promise.all(promiseArray)
+            .then(result => {
+                console.log('Result', result);
+                res.status(200).send({status: 200, message: `Attachment added for note ${noteId}`});
+            })
+            .catch(error => {
+                console.log('ERROR:', error);
+                res.status(400).send({status: 400, message: error.detail});
+            });
+    }).catch(err => {
+        console.log(err);
+        res.status(400).send({status: 400, message: err.detail});
+    });
+};
+
+getAttachments = (req, res) => {
+    let noteId = req.params.id;
+
+    DB.getAllAttachments(noteId).then(data => {
+        res.status(200).send({status: 200, message: data});
+    }).catch(error => {
+        console.log('ERROR:', error);
+        res.status(400).send({status: 400, message: error.detail});
+    });
+};
 module.exports = {
     getTime,
     auth,

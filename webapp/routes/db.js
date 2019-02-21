@@ -258,6 +258,25 @@ function updateNoteByNoteId(id, content, title, lastUpdatedOn, userId) {
     return promise;
 }
 
+function createAttachment(id, url, key, noteId) {
+    var promise = new Promise(function(resolve){
+        var sql = 'INSERT INTO attachments(id, url, _key, noteId) VALUES("' +
+            id + '","' + url + '","' + key + '","' + noteId + '")';
+        console.log(sql);
+        pool.query(sql, function (err) {
+            if (err) {
+                console.log('[INSERT ERROR] - ', err.message);
+                return;
+            }
+            console.log('--------------------------INSERT----------------------------');
+            console.log(id + " " +  url + " " +  key + " " +  noteId);
+            console.log('-----------------------------------------------------------------\n\n');
+            resolve(true);
+        });
+    });
+    return promise;
+}
+
 module.exports = {
     query,
     createUser,
@@ -270,5 +289,5 @@ module.exports = {
     bcrypthash,
     deleteNoteByNoteId,
     updateNoteByNoteId,
-    NoteModel
+    createAttachment
 };

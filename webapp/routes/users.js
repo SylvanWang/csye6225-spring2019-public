@@ -13,14 +13,14 @@ const SDC = require('statsd-client');
 const sdc = new SDC({host: 'localhost', port: 8125});
 
 const docFilter = function (req, file, cb) {
-    // accept image only
+    // accept doc only
     if (!file.originalname.match(/\.(pdf|doc|docx)$/)) {
         return cb(new Error('Only doc files are allowed!'), false);
     }
     cb(null, true);
 };
-var upload = multer({ dest: 'uploads/' });
-// const upload = multer({ storage: STORAGE, fileFilter: docFilter, preservePath: true });
+//var upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: STORAGE, fileFilter: docFilter, preservePath: true });
 
 router.use((req, res, next) => {
     console.log(req.method, req.url);
@@ -43,4 +43,9 @@ router.delete('/note/:id', user.auth, user.deleteNote);
 
 //router.post('/note/:id/attachments', upload.single('attachments', 3), user.addAttachments);
 router.post('/note/:id/attachments', upload.array('attachments', 3), user.addAttachments);
+router.get('/note/:id/attachments', user.getAttachments);
+router.put('/note/:id/attachments/:attachmentId', upload.single('attachments'), user.updateAttachments);
+router.delete('/note/:id/attachments/:attachmentId', note.deleteAttachments);
+
+
 module.exports = router;

@@ -14,8 +14,8 @@ const sdc = new SDC({host: 'localhost', port: 8125});
 
 const docFilter = function (req, file, cb) {
     // accept doc only
-    if (!file.originalname.match(/\.(pdf|doc|docx)$/)) {
-        return cb(new Error('Only doc files are allowed!'), false);
+    if (!file.originalname.match(/\.(png|jpeg|jpg)$/)) {
+        return cb(new Error('Only image files are allowed!'), false);
     }
     cb(null, true);
 };
@@ -41,7 +41,6 @@ router.get('/note/:id', user.auth, user.getMyNote);
 router.post('/note', user.auth, user.createNote);
 router.delete('/note/:id', user.auth, user.deleteNote);
 
-//router.post('/note/:id/attachments', upload.single('attachments', 3), user.addAttachments);
 router.post('/note/:id/attachments', upload.array('attachments', 3), user.addAttachments);
 router.get('/note/:id/attachments', user.getAttachments);
 router.put('/note/:id/attachments/:attachmentId', upload.single('attachments'), user.updateAttachments);

@@ -288,27 +288,22 @@ getAttachments = (req, res) => {
     let noteId = req.params.id;
 
     DB.getAllAttachments(noteId).then(data => {
-        res.status(200).send(data);
+        res.status(200).send({status: 200, message: data});
     }).catch(error => {
         console.log('ERROR:', error);
-        res.status(400).send(error.detail);
+        res.status(400).send({status: 400, message: error.detail});
     });
 };
 
 updateAttachments = (req, res) => {
     let { id, attachmentId } = req.params;
     DB.findAttachmentByIds(attachmentId, id).then(data => {
-        console.log("1111111111111111");
-        console.log(data);
-        console.log("2222222222222");
-        console.log(req.file);
         s3Service.updateFile(data, req.file).then(fdata => {
-
             DB.updateAttchment(attachmentId, fdata.location, fdata.key, id).then(data => {
-                res.status(200).send("Attachment updated");
+                res.status(200).send({status: 200, message: "Attachment updated"});
             }).catch(error => {
                 console.log('ERROR:', error);
-                res.status(400).send(error.detail);
+                res.status(400).send({status: 400, message: error.detail});
             });
         })
     })
@@ -323,18 +318,18 @@ deleteAttachments = (req, res) => {
                 s3Service.deleteFileS3(data[0]._key).then(() => {
                     DB.deleteAttachmentById(attachmentId, id)
                         .then(data => {
-                            res.status(200).send("Attachment deleted");
+                            res.status(200).send({status: 200, message: "Attachment deleted"});
                         })
                         .catch(error => {
                             console.log('ERROR:', error);
-                            res.status(400).send(error.detail);
+                            res.status(400).send({status: 400, message: error.detail});
                         });
                 })
             }
         })
         .catch(error => {
                 console.log('ERROR:', error);
-                res.status(400).send(error.detail);
+                res.status(400).send({status: 400, message: error.detail});
             }
         );
 };

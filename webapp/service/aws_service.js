@@ -3,16 +3,10 @@ const s3 = new AWS.S3();
 const { S3BUCKET } = require('../config')[process.env.NODE_ENV];
 const fs = require('fs');
 
-getFileBody=(file) => {
-
-}
-
 getFileData = (files) => {
     console.log(files);
     return new Promise((res, rej) => {
         let fileData;
-        console.log("111111111111111111");
-        console.log(process.env.NODE_ENV);
         if (process.env.NODE_ENV === 'dev') {
             s3.listBuckets(function(err, data) {
                 if (err) {
@@ -54,8 +48,10 @@ updateFile = (data, file) => {
                 } else {
                     console.log("000000000")
                     console.log(file)
-                    let params = {Bucket: bucket.Buckets[0].Name, Key: data[0]._key, Body: file.buffer};
+                    let params1 = {Bucket: bucket.Buckets[0].Name, Key: data[0]._key};
+                    let params = {Bucket: bucket.Buckets[0].Name, Key: `${Date.now()}-${file.originalname}`, Body: file.buffer};
 
+                    let result1 = s3.deleteObject(params1).promise();
                     let result = s3.upload(params).promise();
 
                     result.then(result => {
@@ -92,7 +88,7 @@ deleteFileS3 = (key) => {
                 }
             });
 
-        } else if (process.env.NODE_ENV === 'default') {
+        } else if (rocess.env.NODE_ENV === 'default') {
             if (fs.existsSync(`uploads/${key}`)) {
                 fs.unlink(`uploads/${key}`, (err) => {
                     if (err) rej(err);

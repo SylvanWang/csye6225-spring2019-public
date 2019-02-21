@@ -35,7 +35,7 @@ updateFile = (data, file) => {
 
     return new Promise((res, rej) => {
 
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'dev') {
 
             let params = { Bucket: S3BUCKET, Key: data.key, Body: file.buffer };
 
@@ -49,7 +49,7 @@ updateFile = (data, file) => {
                 rej(err)
             );
 
-        } else if (process.env.NODE_ENV === 'dev') {
+        } else if (process.env.NODE_ENV === 'default') {
             deleteFileS3(data.key).then(() => {
                 fileData =  {"location":file.path, key: data.key};
                 console.log('Filedata', fileData)
@@ -61,13 +61,13 @@ updateFile = (data, file) => {
 
 deleteFileS3 = (key) => {
     return new Promise((res, rej) => {
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'dev') {
             let params = {Bucket: S3BUCKET, Key: key};
             let result = s3.deleteObject(params).promise();
 
             result.then(result => res()).catch(err=>rej(err));
 
-        } else if (process.env.NODE_ENV === 'dev') {
+        } else if (process.env.NODE_ENV === 'default') {
             if (fs.existsSync(`uploads/${key}`)) {
                 fs.unlink(`uploads/${key}`, (err) => {
                     if (err) rej(err);

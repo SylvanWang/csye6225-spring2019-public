@@ -9,7 +9,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 var app = express();
 
-var indexRouter = require('./routes/in`${Date.now()}-${file.originalname}`dex');
+var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const config = require('./config')[process.env.NODE_ENV];

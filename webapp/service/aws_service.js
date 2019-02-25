@@ -65,8 +65,8 @@ updateFile = (data, file) => {
             });
 
         } else if (process.env.NODE_ENV === 'default') {
-            deleteFileS3(data.key).then(() => {
-                fileData =  {"location":file.path, key: data.key};
+            deleteFileS3(data[0]._key).then(() => {
+                fileData =  {"location":file.path, key: `${Date.now()}-${file.originalname}`};
                 console.log('Filedata', fileData);
                 res(fileData);
             })
@@ -88,7 +88,7 @@ deleteFileS3 = (key) => {
                 }
             });
 
-        } else if (rocess.env.NODE_ENV === 'default') {
+        } else if (process.env.NODE_ENV === 'default') {
             if (fs.existsSync(`uploads/${key}`)) {
                 fs.unlink(`uploads/${key}`, (err) => {
                     if (err) rej(err);

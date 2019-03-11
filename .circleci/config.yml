@@ -21,7 +21,7 @@ jobs:
       # Install project dependencies
       - run:
           name: Install local dependencies
-          command: |
+          command:
             cd webapp
             npm install
       # Cache local dependencies if they don't exist

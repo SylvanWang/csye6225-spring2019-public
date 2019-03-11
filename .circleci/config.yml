@@ -21,7 +21,7 @@ jobs:
       # Install project dependencies
       - run:
           name: Install local dependencies
-          command:
+          command: |
             cd webapp
             npm install
       # Cache local dependencies if they don't exist
@@ -32,16 +32,21 @@ jobs:
       # Lint the source code
       - run:
           name: Linting
-          command: npm run lint
+          command: |
+            cd webapp
+            npm run lint
       # Test the source code
       - run:
           name: Testing
-          command: npm run test
+          command: |
+            cd webapp
+            npm run test
       # Build project with different configuration based on
       # the current branch
       - run:
           name: Building
           command: |
+            cd webapp
             if [ "${CIRCLE_BRANCH}" == "staging" ]; then
                 npm run build-qa
             elif [ "${CIRCLE_BRANCH}" == "master" ]; then
@@ -72,7 +77,8 @@ jobs:
       # Install AWS cli
       - run:
           name: Install aws cli
-          command:
+          command: |
+            cd webapp
             sudo apt-get -y -qq install awscli
       # Set the signature version for the S3 auth
       - run:
@@ -82,6 +88,7 @@ jobs:
       - run:
           name: Deploy to S3
           command: |
+            cd webapp
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
                 aws --region eu-west-2 s3 sync dist s3://project-dev/ --delete
             elif [ "${CIRCLE_BRANCH}" == "staging" ]; then

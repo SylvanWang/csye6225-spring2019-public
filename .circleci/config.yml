@@ -3,7 +3,7 @@ version: 2
 jobs:
   # The build job
   build:
-    working_directory: ~/project
+    working_directory: ~/project/webapp
     docker:
       - image: circleci/node:6.10-browsers
     steps:

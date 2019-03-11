@@ -2,5 +2,5 @@
 sudo chmod 777 -R /opt/webapps
 cd /webapp
 sudo npm install
-cd /opt/webapp/bin
+cd webapp/bin
 sudo node www

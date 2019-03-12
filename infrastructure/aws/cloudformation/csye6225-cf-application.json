@@ -209,7 +209,7 @@
         "AllocatedStorage": "100"
       }
     },
-    "myDynamoDB": {
+   "myDynamoDB": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
         "AttributeDefinitions": [
@@ -231,6 +231,7 @@
         }
       }
     },
+   
     "myS3Bucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
@@ -251,16 +252,45 @@
         "Type": "AWS::CodeDeploy::Application",
         "Properties": {
         "ApplicationName" : "csye6225-webapp",
-          "ComputePlatform": "EC2/On-premises"
+          "ComputePlatform": "Server"
         }
     },
+     "CodeDeployServiceRole": {
+       "Type": "AWS::IAM::Role",
+       "Properties": {
+       "RoleName": "CodeDeployServiceRole",
+       "ManagedPolicyArns": [
+         {
+            "Ref": "AWSCodeDeployRoleARN"
+         }
+      ],
+      "AssumeRolePolicyDocument": {
+         "Version": "2012-10-17",
+         "Statement": [
+            {
+               "Effect": "Allow",
+               "Principal": {
+                  "Service": [
+                     "codedeploy.amazonaws.com"
+                  ]
+               },
+               "Action": [
+                  "sts:AssumeRole"
+               ]
+            }
+         ]
+      }
+   }
+},
     "CodeDeployDeploymentGroup": {
       "Type" : "AWS::CodeDeploy::DeploymentGroup",
       "Properties" : {
         "ApplicationName" : "csye6225-webapp",
-        "autoRollbackConfiguration": { 
-                 "enabled": true,
+        "AutoRollbackConfiguration": { 
+                 "Enabled": true,
+                 "Events": ["DEPLOYMENT_FAILURE"]
                },
+
         "DeploymentConfigName" : "CodeDeployDefault.AllAtOnce",
         "DeploymentGroupName" : "csye6225-webapp-deployment",
         "DeploymentStyle" : {
@@ -268,15 +298,23 @@
         "DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
         },
         "Ec2TagFilters" : [{
-        "Key" : "csye6225",
-        "Value" : "csye6225",
-        "Type" : "KEY_AND_VALUE"
-        }],
-        "ServiceRoleArn" : {"Fn::GetAtt": [
-          "CodeDeployServiceRole","Arn"
-        ]}
+            "Key": {
+              "Ref": "EC2TagKey"
+             },
+            "Value": {
+              "Ref": "EC2TagValue"
+             },
+            "Type" : "KEY_AND_VALUE"
+          }       
+        ],
+        "ServiceRoleArn" : {
+             "Fn::GetAtt": [
+               "CodeDeployServiceRole",
+                "Arn"
+              ]
+        }
       }
-    }
+    },
   },
   "Parameters": {
     "imageId": {
@@ -334,6 +372,10 @@
     "EC2TagValue" : {
       "Type" : "String",
       "Default" : "EC2-Tag-Value"
+    },
+    "AWSCodeDeployRoleARN": {
+   "Type": "String",
+   "Default": "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
     },
     "Appport" : {
       "Type" : "Number",

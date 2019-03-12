@@ -1,3 +1,6 @@
+require('dotenv').config({path: "../.env"});
+process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+
 const DB = require('./routes/db');
 this.UnitTest = {
 	'CreateUser' : function (test) {

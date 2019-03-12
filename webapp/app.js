@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log(process.env.DB_HOST);
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 var createError = require('http-errors');

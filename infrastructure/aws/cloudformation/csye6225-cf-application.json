@@ -246,6 +246,36 @@
           ]
         }
       }
+    },
+    "CodeDeployApplication": {
+        "Type": "AWS::CodeDeploy::Application",
+        "Properties": {
+        "ApplicationName" : "csye6225-webapp",
+          "ComputePlatform": "EC2/On-premises"
+        }
+    },
+    "CodeDeployDeploymentGroup": {
+      "Type" : "AWS::CodeDeploy::DeploymentGroup",
+      "Properties" : {
+        "ApplicationName" : "csye6225-webapp",
+        "autoRollbackConfiguration": { 
+                 "enabled": true,
+               },
+        "DeploymentConfigName" : "CodeDeployDefault.AllAtOnce",
+        "DeploymentGroupName" : "csye6225-webapp-deployment",
+        "DeploymentStyle" : {
+        "DeploymentType": "IN_PLACE",
+        "DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
+        },
+        "Ec2TagFilters" : [{
+        "Key" : "csye6225",
+        "Value" : "csye6225",
+        "Type" : "KEY_AND_VALUE"
+        }],
+        "ServiceRoleArn" : {"Fn::GetAtt": [
+          "CodeDeployServiceRole","Arn"
+        ]}
+      }
     }
   },
   "Parameters": {

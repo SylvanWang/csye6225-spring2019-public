@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+
 const db = require("./db");
 const user = require('../controller/user_controller');
 const note = require('../controller/user_controller');
 
 const multer  = require('multer');
+
+require('dotenv').config();
 const ENV = process.env.NODE_ENV || 'dev';
 
 const config = require('../config')[ENV];

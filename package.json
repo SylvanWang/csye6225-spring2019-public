@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nodeunit ./unitTest.js"
+    "test": "nodeunit ./webapp/unitTest.js"
   },
   "dependencies": {
     "aws-sdk": "^2.406.0",

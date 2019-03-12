@@ -1,4 +1,4 @@
-require('dotenv').config({path: "../.env"});
+require('dotenv').config({path: "../.env.test"});
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 const DB = require('./routes/db');

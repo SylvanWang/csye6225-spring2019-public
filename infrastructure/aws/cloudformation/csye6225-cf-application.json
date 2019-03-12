@@ -252,7 +252,6 @@
         "Type": "AWS::CodeDeploy::Application",
         "Properties": {
         "ApplicationName" : "csye6225-webapp",
-<<<<<<< HEAD
           "ComputePlatform": "Server"
         }
     },
@@ -283,26 +282,15 @@
       }
    }
 },
-=======
-          "ComputePlatform": "EC2/On-premises"
-        }
-    },
->>>>>>> a9db9adddc8fc0acda5ad9d7c5cbc9d846aa7f76
     "CodeDeployDeploymentGroup": {
       "Type" : "AWS::CodeDeploy::DeploymentGroup",
       "Properties" : {
         "ApplicationName" : "csye6225-webapp",
-<<<<<<< HEAD
         "AutoRollbackConfiguration": { 
                  "Enabled": true,
                  "Events": ["DEPLOYMENT_FAILURE"]
                },
 
-=======
-        "autoRollbackConfiguration": { 
-                 "enabled": true,
-               },
->>>>>>> a9db9adddc8fc0acda5ad9d7c5cbc9d846aa7f76
         "DeploymentConfigName" : "CodeDeployDefault.AllAtOnce",
         "DeploymentGroupName" : "csye6225-webapp-deployment",
         "DeploymentStyle" : {
@@ -310,7 +298,6 @@
         "DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
         },
         "Ec2TagFilters" : [{
-<<<<<<< HEAD
             "Key": {
               "Ref": "EC2TagKey"
              },
@@ -328,17 +315,6 @@
         }
       }
     },
-=======
-        "Key" : "csye6225",
-        "Value" : "csye6225",
-        "Type" : "KEY_AND_VALUE"
-        }],
-        "ServiceRoleArn" : {"Fn::GetAtt": [
-          "CodeDeployServiceRole","Arn"
-        ]}
-      }
-    }
->>>>>>> a9db9adddc8fc0acda5ad9d7c5cbc9d846aa7f76
   },
   "Parameters": {
     "imageId": {

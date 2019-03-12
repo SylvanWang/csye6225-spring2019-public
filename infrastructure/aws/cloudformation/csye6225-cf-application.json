@@ -276,7 +276,7 @@
           "CodeDeployServiceRole","Arn"
         ]}
       }
-    },
+    }
   },
   "Parameters": {
     "imageId": {

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const bcrypt = require('bcrypt');
 var mysql = require('mysql');
-const config = require('../config');
+require('../config');
 const NoteModel = require('../models/noteModel');
 
 

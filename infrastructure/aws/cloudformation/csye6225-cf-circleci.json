@@ -191,7 +191,8 @@
 						"Ref": "CodeDeployServiceRole"
 					}
 				]
-			},
+			}
+		},
 			"CirlceCICodeDeploy": {
 				"Type": "AWS::IAM::Policy",
 				"Properties": {
@@ -206,15 +207,23 @@
 									"codedeploy:GetApplicationRevision"
 								],
 								"Resource": [
-									{ "Fn::Join" :
-									[ ":",
-										["arn:aws:codedeploy",
-											{"Ref":"AWSREGION"},
-											{"Ref":"AWSACCOUNTID"},
-											"application",
-											{"Ref":"ApplicationName"}
+									{
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:codedeploy:",
+												{
+													"Ref": "AWSREGION"
+												},":",
+												{
+													"Ref": "AWSACCOUNTID"
+												},
+												":application:",
+												{
+													"Ref": "ApplicationName"
+												}
+											]
 										]
-									]
 									}
 								]
 							},
@@ -233,42 +242,57 @@
 								"Action": [
 									"codedeploy:GetDeploymentConfig"
 								],
-								"Resource":
-									[
-										{ "Fn::Join" :
-										[ ":",
-											["arn:aws:codedeploy",
-												{"Ref":"AWSREGION"},
-												{"Ref":"AWSACCOUNTID"},
-												"deploymentconfig:CodeDeployDefault.OneAtATime"
+								"Resource": [
+									{
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:codedeploy:",
+												{
+													"Ref": "AWSREGION"
+												},":",
+												{
+													"Ref": "AWSACCOUNTID"
+												},
+												":deploymentconfig:CodeDeployDefault.OneAtATime"
 											]
 										]
-										},
-
-										{ "Fn::Join" :
-										[ ":",
-											["arn:aws:codedeploy",
-												{"Ref":"AWSREGION"},
-												{"Ref":"AWSACCOUNTID"},
-												"deploymentconfig:CodeDeployDefault.HalfAtATime"
+									},
+									{
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:codedeploy:",
+												{
+													"Ref": "AWSREGION"
+												},":",
+												{
+													"Ref": "AWSACCOUNTID"
+												},":",
+												":deploymentconfig:CodeDeployDefault.HalfAtATime"
 											]
 										]
-										},
-
-										{ "Fn::Join" :
-										[ ":",
-											["arn:aws:codedeploy",
-												{"Ref":"AWSREGION"},
-												{"Ref":"AWSACCOUNTID"},
-												"deploymentconfig:CodeDeployDefault.AllAtOnce"
+									},
+									{
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:codedeploy:",
+												{
+													"Ref": "AWSREGION"
+												},":",
+												{
+													"Ref": "AWSACCOUNTID"
+												},":",
+												":deploymentconfig:CodeDeployDefault.AllAtOnce"
 											]
 										]
-										}
-									]
+									}
+								]
 							}
 						]
 					},
-					"Users" :[{"Ref":"CircleciUser"}],
+					"Users": ["circleci"],
 					"Roles": [
 						{
 							"Ref": "CodeDeployEC2ServiceRole"
@@ -294,7 +318,7 @@
 							}
 						]
 					},
-					"Users" :[{"Ref":"CircleciUser"}],
+					"Users": ["circleci"],
 					"Roles": [
 						{
 							"Ref": "CodeDeployEC2ServiceRole"
@@ -349,7 +373,8 @@
 								"Resource": "*"
 							}
 						]
-					}
+					},
+					"Users": ["circleci"]
 				}
 			}
 		},
@@ -376,7 +401,7 @@
 			},
 			"ApplicationName": {
 				"Type": "String",
-				"Default": "csye6225-fall2019"
+				"Default": "csye6225-spring2019"
 			},
 			"ApplicationKey": {
 				"Type": "String",
@@ -391,5 +416,4 @@
 				"Default": "EC2TagValue"
 			}
 		}
-	}
 }

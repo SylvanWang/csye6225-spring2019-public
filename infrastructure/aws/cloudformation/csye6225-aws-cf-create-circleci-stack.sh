@@ -14,10 +14,10 @@ DomainNamePre=$(aws route53 list-hosted-zones | jq '.HostedZones[0].Name' | tr -
 DomainName="${DomainNamePre%?}"
 echo $DomainName
 
-CircleCiUser="circleci"
+CircleCiUser="circleci1"
 echo "$CircleCiUser"
 
-ApplicationName="csye6225-fall2019"
+ApplicationName="csye6225-spring2019"
 echo "$ApplicationName"
 
 RoleArn="arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
@@ -26,13 +26,13 @@ echo "$RoleArn"
 if [ ! -z "$DomainName" ]
 then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
-            file://csye6225-cf-cicd.json \
+            file://csye6225-cf-circleci.json \
             --parameters \
                         ParameterKey=AWSREGION,ParameterValue=$AWS_REGION \
                         ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DomainName,ParameterValue=$DomainName \
-                        ParameterKey=CircleciUser,ParameterValue=$CircleciUser\
-                        ParameterKey=AWSCodeDeployRoleARN,ParameterValue=$RoleArn\
+                        ParameterKey=CircleciUser,ParameterValue=$CircleciUser \
+                        ParameterKey=AWSCodeDeployRoleARN,ParameterValue=$RoleArn \
                         ParameterKey=ApplicationName,ParameterValue=$ApplicationName;
             aws cloudformation wait stack-create-complete --stack-name $1)
 

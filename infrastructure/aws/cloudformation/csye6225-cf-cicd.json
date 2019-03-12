@@ -1,0 +1,234 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	 "Resources" : {
+	 	"S3DeployBucket":{
+            "Type" : "AWS::S3::Bucket",
+            "Properties" : {
+              "BucketName" : { "Fn::Join" : [ "" ,[ "code-deploy.", { "Ref" : "DomainName" }] ] }
+            }
+        },
+		"CodeDeployEC2ServiceRole":{
+			"Type": "AWS::IAM::Role",
+			"Properties":{
+				"RoleName": "CodeDeployEC2ServiceRole",
+				"AssumeRolePolicyDocument": {
+               		"Version" : "2012-10-17",
+               		"Statement": [ {
+                  		"Effect": "Allow",
+                  		"Principal": {
+                     		"Service": [ "ec2.amazonaws.com" ]
+                  		},
+                  		"Action": [ "sts:AssumeRole" ]
+               		} ]
+            	}
+			}
+		},
+		"CodeDeployServiceRole":{
+			"Type": "AWS::IAM::Role",
+			"Properties":{
+				"RoleName": "CodeDeployServiceRole",
+				"ManagedPolicyArns" : [{"Ref":"AWSCodeDeployRoleARN"}],
+				"AssumeRolePolicyDocument": {
+               		"Version" : "2012-10-17",
+               		"Statement": [ {
+                  		"Effect": "Allow",
+                  		"Principal": {
+                     		"Service": [ "codedeploy.amazonaws.com" ]
+                  		},
+                  		"Action": [ "sts:AssumeRole" ]
+               		} ]
+				}
+			}
+		},
+		"CodeDeployApplication": {
+  			"Type": "AWS::CodeDeploy::Application",
+  			"Properties": {
+				"ApplicationName" : {"Ref" : "ApplicationName"},
+    			"ComputePlatform": "Server"
+  			}
+		},
+		"CodeDeployDeploymentGroup": {
+			"Type" : "AWS::CodeDeploy::DeploymentGroup",
+			"Properties" : {
+
+			  "ApplicationName" : {"Ref":"ApplicationName"},
+			  "DeploymentConfigName" : "CodeDeployDefault.OneAtATime",
+			  "DeploymentGroupName" : {"Ref":"ApplicationName"},
+			  "DeploymentStyle" : {
+				"DeploymentType": "IN_PLACE",
+				"DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
+			  },
+			  "Ec2TagFilters" : [{
+				"Key" : "csye6225",
+				"Value" : "csye6225",
+				"Type" : "KEY_AND_VALUE"
+			  }],
+			  "ServiceRoleArn" : {"Fn::GetAtt": [
+					"CodeDeployServiceRole","Arn"
+			  ]}
+			}
+		  },
+	 	"CodeDeployEC2S3":{
+	 		"Type" : "AWS::IAM::Policy",
+	 		"Properties" : {
+	 			"PolicyName" : "CodeDeploy-EC2-S3",
+	 			"PolicyDocument" : {
+	 				"Version": "2012-10-17",
+    				"Statement": [
+        				{
+            				"Action": [
+                				"s3:Get*",
+								"s3:List*",
+								"s3:Put*",
+								"s3:Delete*"
+            				],
+            				"Effect": "Allow",
+            				"Resource": [
+            					"*"
+            				]
+        				}
+    				]
+	 			},
+	 			"Roles": [ { "Ref": "CodeDeployEC2ServiceRole" } ]
+	 		}
+	 	},
+	 	"TravisUploadToS3":{
+	 		"Type" : "AWS::IAM::Policy",
+	 		"Properties" : {
+	 			"PolicyName" : "Travis-Upload-To-S3",
+	 			"PolicyDocument" : {
+	 				"Version" : "2012-10-17",
+	 				"Statement" : [
+	 					{
+	 						"Effect" : "Allow",
+	 						"Action" : [
+	 							"s3:PutObject"
+	 						],
+	 						"Resource" : [
+								"*"
+	 						]
+	 					}
+	 				]
+	 			},
+	 			"Users" :[{"Ref":"travisUser"}]
+	 		}
+	 	},
+	 	"TravisCodeDeploy":{
+	 		"Type" : "AWS::IAM::Policy",
+	 		"Properties" : {
+	 			"PolicyName" : "Travis-Code-Deploy",
+	 			"PolicyDocument" : {
+	 				"Version" : "2012-10-17",
+	 				"Statement" : [
+	 					{
+      						"Effect": "Allow",
+      						"Action": [
+        						"codedeploy:RegisterApplicationRevision",
+        						"codedeploy:GetApplicationRevision"
+      						],
+      						"Resource": [
+      							{ "Fn::Join" : [ "" ,[
+      													"arn:aws:codedeploy:",
+      												   	{"Ref":"AWSREGION"},
+      												   	":",
+      												   	{ "Ref" : "AWSACCOUNTID" },
+      												   	":application:",
+      												   	{"Ref":"ApplicationName"}
+      												]
+      										   ]
+      							}
+      						]
+    					},
+    					{
+      						"Effect": "Allow",
+      						"Action": [
+        						"codedeploy:CreateDeployment",
+       							"codedeploy:GetDeployment"
+      						],
+      						"Resource": [
+        						"*"
+      						]
+    					},
+    					{
+      						"Effect": "Allow",
+      						"Action": [
+        						"codedeploy:GetDeploymentConfig"
+      						],
+      						"Resource": [
+      							{
+      								"Fn::Join" : [ "" ,[
+      													"arn:aws:codedeploy:",
+      												   	{"Ref":"AWSREGION"},
+      												   	":",
+      												   	{ "Ref" : "AWSACCOUNTID" },
+      												   	":deploymentconfig:CodeDeployDefault.OneAtATime"
+      												]
+      										    ]
+      							},
+      							{
+      								"Fn::Join" : [ "" ,[
+      													"arn:aws:codedeploy:",
+      												   	{"Ref":"AWSREGION"},
+      												   	":",
+      												   	{ "Ref" : "AWSACCOUNTID" },
+      												   	":deploymentconfig:CodeDeployDefault.HalfAtATime"
+      												]
+      										    ]
+      							},
+      							{
+      								"Fn::Join" : [ "" ,[
+      													"arn:aws:codedeploy:",
+      												   	{"Ref":"AWSREGION"},
+      												   	":",
+      												   	{ "Ref" : "AWSACCOUNTID" },
+      												   	":deploymentconfig:CodeDeployDefault.AllAtOnce"
+      												]
+      										    ]
+      							}
+      						]
+    					}
+	 				]
+	 			},
+	 			"Users" :[{"Ref":"travisUser"}]
+	 		}
+	 	}
+	 },
+	 "Parameters" : {
+       "AWSREGION" : {
+          "Type" : "String",
+          "Default" : "us-east-1"
+       },
+       "AWSACCOUNTID" : {
+          "Type" : "String",
+          "Default" : "273656506688"
+       },
+       "DomainName" : {
+            "Type" : "String",
+            "Default" : "csye6225-fall2019-default.me"
+       },
+       "travisUser" : {
+            "Type" : "String",
+            "Default" : "travis"
+       },
+       "AWSCodeDeployRoleARN" : {
+            "Type" : "String",
+            "Default" : "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+       },
+			 "ApplicationName" : {
+				 		"Type": "String",
+						"Default" : "csye6225-fall2019"
+			 },
+			 "ApplicationKey":{
+				 		"Type": "String",
+				 		"Default" : "ApplicationKey"
+			 },
+			 "EC2TagKey":{
+				 		"Type":"String",
+						"Default" : "EC2TagKey"
+			 },
+			 "EC2TagValue":{
+					 "Type":"String",
+					 "Default" : "EC2TagValue"
+			}
+   }
+}

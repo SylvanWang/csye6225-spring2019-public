@@ -14,8 +14,8 @@ DomainNamePre=$(aws route53 list-hosted-zones | jq '.HostedZones[0].Name' | tr -
 DomainName="${DomainNamePre%?}"
 echo $DomainName
 
-TravisUser="travis"
-echo "$TravisUser"
+CircleCiUser="circleci"
+echo "$CircleCiUser"
 
 ApplicationName="csye6225-fall2019"
 echo "$ApplicationName"
@@ -31,7 +31,7 @@ then
                         ParameterKey=AWSREGION,ParameterValue=$AWS_REGION \
                         ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DomainName,ParameterValue=$DomainName \
-                        ParameterKey=travisUser,ParameterValue=$TravisUser\
+                        ParameterKey=CircleciUser,ParameterValue=$CircleciUser\
                         ParameterKey=AWSCodeDeployRoleARN,ParameterValue=$RoleArn\
                         ParameterKey=ApplicationName,ParameterValue=$ApplicationName;
             aws cloudformation wait stack-create-complete --stack-name $1)

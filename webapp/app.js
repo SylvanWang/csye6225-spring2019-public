@@ -1,11 +1,14 @@
+require('dotenv').config();
+console.log(process.env.DB_HOST);
+process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-require('dotenv').config();
-process.env.NODE_ENV = 'dev';
+
 
 var app = express();
 

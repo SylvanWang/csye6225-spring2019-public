@@ -4,74 +4,74 @@
 #
 version: 2
 jobs:
-  build:
-    docker:
+    build:
+        docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
+          - image: circleci/node:7.10
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-    working_directory: ~/repo/webapp
+        working_directory: ~/repo/webapp
 
-    steps:
-      - checkout
+        steps:
+            - checkout
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+                    - v1-dependencies-
 
-      - run: yarn install
+            - run: yarn install
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - save_cache:
+                paths:
+                    - node_modules
+                key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn test
+            - run: yarn test
       # The deploy job
-  deploy:
-    working_directory: ~/webapp
-    docker:
-      - image: circleci/node:6.10-browsers
-    steps:
+    deploy:
+        working_directory: ~/repo/webapp
+        docker:
+            - image: circleci/node:6.10-browsers
+        steps:
       # Log the current branch
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
+            - run:
+                name: Show current branch
+                command: echo ${CIRCLE_BRANCH}
           # Restore cache from the build job which contains the
           # dist folder that needs to be deployed
-      - restore_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+            - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           # Install AWS cli
-      - run:
-          name: Install aws cli
-          command:
+            - run:
+                name: Install aws cli
+                command:
                 sudo apt-get -y -qq install awscli
           # Set the signature version for the S3 auth
-      - run:
-          name: Setting Signature Version 4 for S3 Request Authentication
-          command: aws configure set default.s3.signature_version s3v4
+            - run:
+                name: Setting Signature Version 4 for S3 Request Authentication
+                command: aws configure set default.s3.signature_version s3v4
           # Deploy to the S3 bucket corresponding to the current branch
-      - run:
-          name: Deploy to S3
-          command: aws --region us-east-1 s3 sync dist s3://code-depoy.csye6225-spring2019-hera.me/ --delete
+            - run:
+                name: Deploy to S3
+                command: aws --region us-east-1 s3 sync dist s3://code-depoy.csye6225-spring2019-hera.me/ --delete
 
-  workflows:
-    version: 2
+    workflows:
+          version: 2
     # The build and deploy workflow
-    build-deploy:
-      jobs:
-        - build
+          build-deploy:
+          jobs:
+              - build
         # The deploy job will only run on the filtered branches and
         # require the build job to be successful before it starts
-        - deploy:
-            requires:
-              - build
-            filters:
+              - deploy:
+                  requires:
+                    - build
+                  filters:

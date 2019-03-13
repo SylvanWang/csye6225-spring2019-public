@@ -20,7 +20,7 @@ echo $domainName
 
 if [ ! -z "$domainName" ]
 then
-      res=$(aws cloudformation create-stack --stack-name $1 --template-body \
+      res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
             file://csye6225-cf-application.json \
             --parameters \
                         ParameterKey=imageId,ParameterValue=$imageId \
@@ -29,7 +29,11 @@ then
                         ParameterKey=privateSubnetId1,ParameterValue=$privateSubnetId1 \
                         ParameterKey=privateSubnetId2,ParameterValue=$privateSubnetId2 \
                         ParameterKey=DBport,ParameterValue="3306"\
-                        ParameterKey=DomainName,ParameterValue=$domainName;
+                        ParameterKey=DomainName,ParameterValue=$domainName \
+                        ParameterKey=EC2TagKey,ParameterValue="csye6225"\
+                        ParameterKey=EC2TagValue,ParameterValue="csye6225"\
+                        ParameterKey=CodeDeployEC2ServiceRole,ParameterValue="CodeDeployEC2ServiceRole" \
+                        ParameterKey=Appport,ParameterValue="3000";
             aws cloudformation wait stack-create-complete --stack-name $1)
 
 else

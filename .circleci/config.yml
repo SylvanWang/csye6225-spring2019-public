@@ -28,4 +28,4 @@ jobs:
             - run:
                 name: Setting Signature Version 4 for S3 Request Authentication
                 command: aws configure set default.s3.signature_version s3v4
-            - run: aws s3 sync . s3://code-depoy.csye6225-spring2019-hera.me
+            - run: aws s3 sync . s3://${BUCKET_NAME}

@@ -7,7 +7,7 @@ jobs:
     build:
         docker:
           - image: circleci/node:7.10
-        working_directory: ~/repo/webapp
+        working_directory: ~/repo
 
         steps:
             - checkout
@@ -28,4 +28,6 @@ jobs:
             - run:
                 name: Setting Signature Version 4 for S3 Request Authentication
                 command: aws configure set default.s3.signature_version s3v4
-            - run: aws s3 sync . s3://${BUCKET_NAME}
+            - run:
+                name: Upload to S3 Bucket
+                command: aws s3 sync . s3://${BUCKET_NAME}

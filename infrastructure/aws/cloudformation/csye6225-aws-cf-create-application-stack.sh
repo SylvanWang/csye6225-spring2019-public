@@ -1,6 +1,6 @@
 #!/bin/bash
 
-imageId=$(aws ec2 describe-images --filters Name=name,Values="centos_7" | jq '.Images[0].ImageId')
+imageId=$(aws ec2 describe-images --filters Name=product-code,Values="aw0evgkw8e5c1q413zgy5pjce" | jq '.Images[0].ImageId')
 echo $imageId
 
 vpcId=$(aws ec2  describe-vpcs --filters Name=tag:aws:cloudformation:logical-id,Values="myVPC" |jq '.Vpcs[0].VpcId')
@@ -32,7 +32,6 @@ then
                         ParameterKey=DomainName,ParameterValue=$domainName \
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\
                         ParameterKey=EC2TagValue,ParameterValue="csye6225"\
-                        ParameterKey=CodeDeployEC2ServiceRole,ParameterValue="CodeDeployEC2ServiceRole" \
                         ParameterKey=Appport,ParameterValue="3000";
             aws cloudformation wait stack-create-complete --stack-name $1)
 

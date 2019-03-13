@@ -36,11 +36,11 @@ jobs:
       # run tests!
       - run: yarn test
       # The deploy job
-      deploy:
-        working_directory: ~/project
-        docker:
+    deploy:
+      working_directory: ~/project
+      docker:
           - image: circleci/node:6.10-browsers
-        steps:
+      steps:
           # Log the current branch
           - run:
               name: Show current branch

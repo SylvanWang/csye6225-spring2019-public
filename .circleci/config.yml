@@ -30,7 +30,7 @@ jobs:
                 command: aws configure set default.s3.signature_version s3v4
             - run:
                 name: zip project
-                command: zip -r csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip
+                command: ls
             - run:
                 name: Upload to S3 Bucket
                 command: aws s3 sync csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip s3://${BUCKET_NAME}

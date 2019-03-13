@@ -66,44 +66,6 @@
 				}
 			}
 		},
-		"CodeDeployApplication": {
-			"Type": "AWS::CodeDeploy::Application",
-			"Properties": {
-				"ApplicationName": {
-					"Ref": "ApplicationName"
-				},
-				"ComputePlatform": "Server"
-			}
-		},
-		"CodeDeployDeploymentGroup": {
-			"Type": "AWS::CodeDeploy::DeploymentGroup",
-			"Properties": {
-				"ApplicationName": {
-					"Ref": "ApplicationName"
-				},
-				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
-				"DeploymentGroupName": {
-					"Ref": "ApplicationName"
-				},
-				"DeploymentStyle": {
-					"DeploymentType": "IN_PLACE",
-					"DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
-				},
-				"Ec2TagFilters": [
-					{
-						"Key": "csye6225",
-						"Value": "csye6225",
-						"Type": "KEY_AND_VALUE"
-					}
-				],
-				"ServiceRoleArn": {
-					"Fn::GetAtt": [
-						"CodeDeployServiceRole",
-						"Arn"
-					]
-				}
-			}
-		},
 		"CodeDeployEC2S3": {
 			"Type": "AWS::IAM::Policy",
 			"Properties": {
@@ -193,10 +155,10 @@
 				]
 			}
 		},
-			"CirlceCICodeDeploy": {
+			"CircleCICodeDeploy": {
 				"Type": "AWS::IAM::Policy",
 				"Properties": {
-					"PolicyName": "CirlceCI-Code-Deploy",
+					"PolicyName": "CircleCI-Code-Deploy",
 					"PolicyDocument": {
 						"Version": "2012-10-17",
 						"Statement": [

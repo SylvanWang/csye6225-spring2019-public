@@ -255,33 +255,6 @@
           "ComputePlatform": "Server"
         }
     },
-     "CodeDeployServiceRole": {
-       "Type": "AWS::IAM::Role",
-       "Properties": {
-       "RoleName": "CodeDeployServiceRole",
-       "ManagedPolicyArns": [
-         {
-            "Ref": "AWSCodeDeployRoleARN"
-         }
-      ],
-      "AssumeRolePolicyDocument": {
-         "Version": "2012-10-17",
-         "Statement": [
-            {
-               "Effect": "Allow",
-               "Principal": {
-                  "Service": [
-                     "codedeploy.amazonaws.com"
-                  ]
-               },
-               "Action": [
-                  "sts:AssumeRole"
-               ]
-            }
-         ]
-      }
-   }
-},
     "CodeDeployDeploymentGroup": {
       "Type" : "AWS::CodeDeploy::DeploymentGroup",
       "Properties" : {

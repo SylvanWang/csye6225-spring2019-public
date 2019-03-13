@@ -37,3 +37,6 @@ jobs:
             - run:
                 name: Upload to S3 Bucket
                 command: aws s3 cp csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip s3://${BUCKET_NAME}
+            - run
+                name: aws deploy
+                command: aws deploy push --application-name csye6225 --description "This is my deployment" --s3-location s3://${BUCKET_NAME}/csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip

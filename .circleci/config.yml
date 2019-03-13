@@ -7,7 +7,7 @@ jobs:
     build:
         docker:
           - image: circleci/node:7.10
-        working_directory: ~/repo
+        working_directory: ~/repo/webapp
 
         steps:
             - checkout
@@ -30,4 +30,4 @@ jobs:
                 command: aws configure set default.s3.signature_version s3v4
             - run:
                 name: Upload to S3 Bucket
-                command: aws s3 sync . s3://${BUCKET_NAME}
+                command: aws s3 sync builds/code-deploy"$CIRCLE_CURRENT_TIME_MILLS".zip s3://${BUCKET_NAME}

@@ -28,15 +28,4 @@ jobs:
             - run:
                 name: Setting Signature Version 4 for S3 Request Authentication
                 command: aws configure set default.s3.signature_version s3v4
-            - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
-            - aws-s3/sync:
-                from: bucket
-                to: 's3://code-depoy.csye6225-spring2019-hera.me/prefix'
-                arguments: |
-                       --acl public-read \
-                       --cache-control "max-age=86400"
-                overwrite: true
-            - aws-s3/copy:
-                from: bucket/build_asset.txt
-                to: 's3://code-depoy.csye6225-spring2019-hera.me'
-                arguments: '--dryrun'
+            - run: aws s3 sync . s3://code-depoy.csye6225-spring2019-hera.me

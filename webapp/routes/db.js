@@ -5,7 +5,6 @@ var mysql = require('mysql');
 require('../config');
 const NoteModel = require('../models/noteModel');
 
-
 var pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,

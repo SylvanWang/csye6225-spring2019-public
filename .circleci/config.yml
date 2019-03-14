@@ -36,5 +36,5 @@ jobs:
                 command: aws s3 cp csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip s3://${BUCKET_NAME}
             - run:
                 name: Amazon Deploy
-                command: aws deploy create-deployment --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --s3-location bucket=${BUCKET_NAME},bundleType=zip,key=csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip
+                command: aws codedeploy create-deployment --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --s3-location bucket=${BUCKET_NAME},bundleType=zip,key=csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip
 

@@ -10,24 +10,21 @@ getFileData = (files) => {
     return new Promise((res, rej) => {
         let fileData;
         if (process.env.NODE_ENV === 'dev') {
-            if (err) {
-                console.log("Error", err);
-            } else {
-                let promiseArray = files.map(f => {
-                    let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
-                    return s3.upload(params).promise();
-                });
 
-                Promise.all(promiseArray).then(result => {
-                    fileData = result.map(file => {
-                        return {"location": file.Location, "key": file.Key}
-                    });
-                    console.log('S3 data ->', fileData);
-                    res(fileData);
-                }).catch(err =>
-                    rej(err)
-                );
-            }
+            let promiseArray = files.map(f => {
+                let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
+                return s3.upload(params).promise();
+            });
+
+            Promise.all(promiseArray).then(result => {
+                fileData = result.map(file => {
+                    return {"location": file.Location, "key": file.Key}
+                });
+                console.log('S3 data ->', fileData);
+                res(fileData);
+            }).catch(err =>
+                rej(err)
+            );
         } else if (process.env.NODE_ENV === 'default') {
             fileData = files.map(file => {
                 return {"location": file.path, "key": file.filename}
@@ -43,23 +40,20 @@ updateFile = (data, file) => {
     return new Promise((res, rej) => {
 
         if (process.env.NODE_ENV === 'dev') {
-            if (err) {
-                console.log("Error", err);
-            } else {
-                let params = {
-                    Bucket: S3BUCKET,
-                    Key: `${Date.now()}-${file.originalname}`,
-                    Body: file.buffer
-                };
-                let result = s3.upload(params).promise();
 
-                result.then(result => {
-                    let resultData = {"location": result.Location, "key": result.Key};
-                    res(resultData);
-                }).catch(err =>
-                    rej(err)
-                )
-            }
+            let params = {
+                Bucket: S3BUCKET,
+                Key: `${Date.now()}-${file.originalname}`,
+                Body: file.buffer
+            };
+            let result = s3.upload(params).promise();
+
+            result.then(result => {
+                let resultData = {"location": result.Location, "key": result.Key};
+                res(resultData);
+            }).catch(err =>
+                rej(err)
+            )
         } else if (process.env.NODE_ENV === 'default') {
             deleteFileS3(data[0]._key).then(() => {
                 fileData = {"location": file.path, key: `${Date.now()}-${file.originalname}`};
@@ -73,14 +67,12 @@ updateFile = (data, file) => {
 deleteFileS3 = (key) => {
     return new Promise((res, rej) => {
         if (process.env.NODE_ENV === 'dev') {
-            if (err) {
-                console.log("Error", err);
-            } else {
-                let params = {Bucket: S3BUCKET, Key: key};
-                let result = s3.deleteObject(params).promise();
 
-                result.then(result => res()).catch(err => rej(err));
-            }
+            let params = {Bucket: S3BUCKET, Key: key};
+            let result = s3.deleteObject(params).promise();
+
+            result.then(result => res()).catch(err => rej(err));
+
 
         } else if (process.env.NODE_ENV === 'default') {
             if (fs.existsSync(`uploads/${key}`)) {

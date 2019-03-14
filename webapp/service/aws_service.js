@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const {S3BUCKET} = require('../config')[process.env.NODE_ENV];
 const fs = require('fs');
-
+console.log("S3BUCKET: " + S3BUCKET);
 getFileData = (files) => {
     console.log(files);
     return new Promise((res, rej) => {
@@ -13,7 +13,6 @@ getFileData = (files) => {
             } else {
                 let promiseArray = files.map(f => {
                     let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
-                    console.log(params);
                     return s3.upload(params).promise();
                 });
 

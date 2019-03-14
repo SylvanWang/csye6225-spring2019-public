@@ -12,5 +12,5 @@ hooks:
      runas: centos
   ApplicationStart:
    - location: ./applicationStart.sh
-     timeout: 180
+     timeout: 15
      runas: centos

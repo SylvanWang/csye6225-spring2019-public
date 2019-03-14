@@ -79,7 +79,7 @@
                 "echo export NODE_ENV=dev >> webappEnv.sh",
 
                 "sudo groupadd nodeUser",
-                "sudo useradd -M -s /bin/nologin -g nodeUser -d /opt/webapps nodeUser",
+                "sudo useradd -M -s /bin/nologin -g nodeUser -d /webapp nodeUser",
 
                 "cd /etc/systemd/system/",
                 "sudo touch nodeserver.service",

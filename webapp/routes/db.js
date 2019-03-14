@@ -12,9 +12,8 @@ var pool = mysql.createPool({
     user: process.env.USER_NAME,
     password: process.env.PASS
 });
-console.log(process.env  );
+console.log(process.env);
 var sql = 'SELECT * FROM users';
-
 pool.query(sql, function (err, result) {
     if (err) {
         console.log('[SELECT ERROR] - ', err.message);

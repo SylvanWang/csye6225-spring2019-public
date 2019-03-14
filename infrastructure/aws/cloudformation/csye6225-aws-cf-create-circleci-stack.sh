@@ -17,7 +17,7 @@ echo $DomainName
 CircleCiUser="circleci1"
 echo "$CircleCiUser"
 
-ApplicationName="csye6225-spring2019"
+ApplicationName="csye6225-webapp"
 echo "$ApplicationName"
 
 RoleArn="arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"

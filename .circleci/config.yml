@@ -23,17 +23,23 @@ jobs:
                 key: v1-dependencies-{{ checksum "package.json" }}
             - run: yarn test
             - run:
+                name: Install python
+                command: sudo apt-get install python
+            - run:
                 name: Install aws cli
-                command: sudo apt-get -y -qq install awscli --upgrade
+                command: sudo apt-get install python
+            - run:
+                name: install pip
+                command: sudo apt install python-pip
+            - run:
+                name: install cli
+                command: pip install awscli --upgrade --user
             - run:
                 name: Setting Signature Version 4 for S3 Request Authentication
                 command: aws configure set default.s3.signature_version s3v4
             - run:
                 name: zip project
                 command: zip -r csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip * .[^.]*
-            - run:
-                name: see all files
-                command: aws help
             - run:
                 name: Upload to S3 Bucket
                 command: aws s3 cp csye6225-codedeploy-${CIRCLE_BUILD_NUM}.zip s3://${BUCKET_NAME}

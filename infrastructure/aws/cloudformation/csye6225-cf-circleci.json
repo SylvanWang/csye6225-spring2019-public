@@ -2,7 +2,7 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Resources": {
 		"CircleciEc2Ami": {
-				"Type": "AWS::IAM::Policy",
+				"Type": "AWS::IAM::ManagedPolicy",
 				"Properties": {
 					"ManagedPolicyName": "circleci-ec2-ami",
 					"PolicyDocument": {

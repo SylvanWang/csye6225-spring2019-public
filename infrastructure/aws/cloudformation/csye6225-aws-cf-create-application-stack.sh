@@ -18,6 +18,9 @@ echo $privateSubnetId2
 domainName=$(aws route53 list-hosted-zones | jq '.HostedZones[0].Name' | tr -d '"')
 echo $domainName
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+echo "$AWS_ACCOUNT_ID"
+
 if [ ! -z "$domainName" ]
 then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
@@ -28,6 +31,7 @@ then
                         ParameterKey=publicSubnetId1,ParameterValue=$publicSubnetId1 \
                         ParameterKey=privateSubnetId1,ParameterValue=$privateSubnetId1 \
                         ParameterKey=privateSubnetId2,ParameterValue=$privateSubnetId2 \
+                        ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DBport,ParameterValue="3306"\
                         ParameterKey=DomainName,ParameterValue=$domainName \
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\

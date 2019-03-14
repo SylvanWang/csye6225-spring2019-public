@@ -99,7 +99,7 @@
                 { "Fn::Sub" : ["sudo echo Environment=PASS=${DatabasePass} >> nodeserver.service", { "DatabasePass" : {"Ref" : "DBPassword" }}]},
                 { "Fn::Sub" : ["sudo echo Environment=DB_HOST=${DatabaseHost} >> nodeserver.service", { "DatabaseHost" : {"Fn::GetAtt": ["myRDSInstance","Endpoint.Address"]}}]},
                 { "Fn::Sub" : ["sudo echo Environment=S3BUCKET=${S3BUCKET} >> nodeserver.service", { "S3BUCKET" : {"Ref":"myS3Bucket"}}]},
-                "sudo echo 'ExecStart=/usr/bin/forever www' >> nodeserver.service",
+                "sudo echo 'ExecStart=/usr/bin/node www' >> nodeserver.service",
                 "sudo echo '[Install]' >> nodeserver.service",
                 "sudo echo 'WantedBy=multi-user.target' >> nodeserver.service",
                 "sudo systemctl daemon-reload",

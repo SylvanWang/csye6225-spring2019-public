@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo chmod 777 -R /opt/webapps
-cd /webapp
-sudo npm install
-cd webapp/bin
-sudo node www
+sudo chmod 777 -R webapp
+cd webapp
+npm install
+cd bin
+node ./webapp/bin/www

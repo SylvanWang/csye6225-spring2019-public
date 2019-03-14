@@ -23,8 +23,11 @@ jobs:
                 key: v1-dependencies-{{ checksum "package.json" }}
             - run: yarn test
             - run:
-                name: Install aws cli
-                command: sudo apt-get -y -qq install awscli --upgrade
+                name: Install packages
+                command: sudo apt-get update && sudo apt-get install wget zip unzip python2.7 python-pip -y
+            - run:
+                name: Install awscli
+                command: sudo pip install awscli
             - run:
                 name: Setting Signature Version 4 for S3 Request Authentication
                 command: aws configure set default.s3.signature_version s3v4

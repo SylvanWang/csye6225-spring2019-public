@@ -297,7 +297,7 @@
       }
     },
       "CircleCICodeDeploy": {
-        "Type": "AWS::IAM::Policy",
+        "Type": "AWS::IAM::ManagedPolicy",
         "Properties": {
           "PolicyName": "CircleCI-Code-Deploy",
           "PolicyDocument": {
@@ -445,7 +445,7 @@
       }
     },
     "CodeDeployEC2S3": {
-      "Type": "AWS::IAM::Policy",
+      "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
         "PolicyName": "CodeDeploy-EC2-S3",
         "PolicyDocument": {
@@ -473,7 +473,7 @@
       }
     },
     "CircleCIUploadToS3": {
-        "Type": "AWS::IAM::Policy",
+        "Type": "AWS::IAM::ManagedPolicy",
         "Properties": {
           "PolicyName": "CircleCI-Upload-To-S3",
           "PolicyDocument": {
@@ -570,7 +570,7 @@
     },
     "ApplicationName": {
         "Type": "String",
-        "Default": "csye6225-spring2019"
+        "Default": "csye6225-webapp"
     }
   }
 }

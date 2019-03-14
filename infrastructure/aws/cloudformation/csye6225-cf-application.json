@@ -299,7 +299,7 @@
       "CircleCICodeDeploy": {
         "Type": "AWS::IAM::ManagedPolicy",
         "Properties": {
-          "PolicyName": "CircleCI-Code-Deploy",
+          "ManagedPolicyName": "CircleCI-Code-Deploy",
           "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [
@@ -447,7 +447,7 @@
     "CodeDeployEC2S3": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "PolicyName": "CodeDeploy-EC2-S3",
+        "ManagedPolicyName": "CodeDeploy-EC2-S3",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -475,7 +475,7 @@
     "CircleCIUploadToS3": {
         "Type": "AWS::IAM::ManagedPolicy",
         "Properties": {
-          "PolicyName": "CircleCI-Upload-To-S3",
+          "ManagedPolicyName": "CircleCI-Upload-To-S3",
           "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [

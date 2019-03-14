@@ -4,7 +4,7 @@
 		"CircleciEc2Ami": {
 				"Type": "AWS::IAM::Policy",
 				"Properties": {
-					"PolicyName": "circleci-ec2-ami",
+					"ManagedPolicyName": "circleci-ec2-ami",
 					"PolicyDocument": {
 						"Version": "2012-10-17",
 						"Statement": [

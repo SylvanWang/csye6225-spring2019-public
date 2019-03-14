@@ -5,9 +5,9 @@ var mysql = require('mysql');
 require('../config');
 const NoteModel = require('../models/noteModel');
 
-
+console.log("Host: " + process.env.DB_HOST);
 var pool = mysql.createPool({
-    host: process.env.DB_HOST,
+    host: "csye6225-spring2019.c4dnt3p8gjkt.us-east-1.rds.amazonaws.com",
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
     user: process.env.USER_NAME,

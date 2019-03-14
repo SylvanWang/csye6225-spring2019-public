@@ -1,6 +1,6 @@
 #!/bin/bash
 
-imageId=$(aws ec2 describe-images --filters Name=product-code,Values="aw0evgkw8e5c1q413zgy5pjce" | jq '.Images[0].ImageId')
+imageId=$(aws ec2 describe-images --filters Name=description,Values="Centos AMI for CSYE 6225 - Spring 2019" | jq '.Images[0].ImageId')
 echo $imageId
 
 vpcId=$(aws ec2  describe-vpcs --filters Name=tag:aws:cloudformation:logical-id,Values="myVPC" |jq '.Vpcs[0].VpcId')

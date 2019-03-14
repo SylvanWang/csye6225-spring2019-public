@@ -1,9 +1,7 @@
 #!/bin/bash
-killall node
+pkill node
 sudo chmod 777 -R webapp
+cd /webapp
 npm install
-cd /etc/systemd/system/
 sudo systemctl start nodeserver.service
-cd ~
-cd webapp
 node ./bin/www

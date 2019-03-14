@@ -11,6 +11,6 @@ hooks:
      timeout: 180
      runas: centos
   ApplicationStart:
-   - location: ~/webapp/applicationStart.sh
+   - location: ./applicationStart.sh
      timeout: 180
      runas: centos

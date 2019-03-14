@@ -10,6 +10,6 @@ hooks:
    - location: ./afterInstall.sh
      timeout: 180
      runas: centos
-  ApplicationStart:
+  ValidateService:
    - location: ./validateService.sh
      runas: centos

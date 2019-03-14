@@ -12,9 +12,8 @@ var pool = mysql.createPool({
     user: process.env.USER_NAME,
     password: process.env.PASS
 });
-console.log(process.env  );
+console.log(process.env);
 var sql = 'SELECT * FROM users';
-
 pool.query(sql, function (err, result) {
     if (err) {
         console.log('[SELECT ERROR] - ', err.message);
@@ -24,6 +23,30 @@ pool.query(sql, function (err, result) {
     console.log('--------------------------SELECT----------------------------');
     console.log(result);
     console.log('------------------------------------------------------------\n\n');
+});
+
+var tablesql1 = 'create table if not exists attachments(id VARCHAR(100) not null, url VARCHAR(245), _key VARCHAR(245), noteId VARCHAR(100) not null)';
+pool.query(tablesql1, function (err, result) {
+    if (err) {
+        console.log('[CREATE ERROR] - ', err.message);
+        return;
+    }
+});
+
+var tablesql2 = 'create table if not exists users(id int(11) not null auto_increment, username VARCHAR(45), password VARCHAR(100), constraint pk_example primary key (id))';
+pool.query(tablesql2, function (err, result) {
+    if (err) {
+        console.log('[CREATE ERROR] - ', err.message);
+        return;
+    }
+});
+
+var tablesql3 = 'create table if not exists notes(id VARCHAR(100) not null, content VARCHAR(45), title VARCHAR(45), createdOn VARCHAR(45), lastUpdatedOn VARCHAR(45), creator_id VARCHAR(45) not null, constraint pk_example primary key (id))';
+pool.query(tablesql3, function (err, result) {
+    if (err) {
+        console.log('[CREATE ERROR] - ', err.message);
+        return;
+    }
 });
 
 function bcrypthash(password) {

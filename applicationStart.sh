@@ -1,4 +1,3 @@
 #!/bin/bash
-sudo systemctl status nodeserver.service -l
-sudo systemctl start nodeserver.service && journalctl -fexu nodeserver.service >run.out 2>run.err &
-
+source /home/centos/.bash_profile
+nohup node /webapp/bin/www >/dev/null 2>&1 &

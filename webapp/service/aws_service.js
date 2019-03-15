@@ -8,28 +8,22 @@ getFileData = (files) => {
     return new Promise((res, rej) => {
         let fileData;
         if (process.env.NODE_ENV === 'dev') {
-            s3.listBuckets(function (err, data) {
-                if (err) {
-                    console.log("Error", err);
-                } else {
-
-                    let promiseArray = files.map(f => {
-                        let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
-                        console.log(params);
-                        return s3.upload(params).promise();
-                    });
-
-                    Promise.all(promiseArray).then(result => {
-                        fileData = result.map(file => {
-                            return {"location": file.Location, "key": file.Key}
-                        });
-                        console.log('S3 data ->', fileData);
-                        res(fileData);
-                    }).catch(err =>
-                        rej(err)
-                    );
-                }
+            let promiseArray = files.map(f => {
+                let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
+                console.log(params);
+                return s3.upload(params).promise();
             });
+
+            Promise.all(promiseArray).then(result => {
+                fileData = result.map(file => {
+                    return {"location": file.Location, "key": file.Key}
+                });
+                console.log('S3 data ->', fileData);
+                res(fileData);
+            }).catch(err =>
+                rej(err)
+            );
+
         } else if (process.env.NODE_ENV === 'default') {
             fileData = files.map(file => {
                 return {"location": file.path, "key": file.filename}

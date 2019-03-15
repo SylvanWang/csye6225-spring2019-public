@@ -1,5 +1,5 @@
 #!/bin/bash
 source /home/centos/.bash_profile
-sudo systemctl daemon-reload
-sudo systemctl start nodeserver.service && journalctl -fexu nodeserver.service >run.out 2>run.err &
-
+npm install -g forever
+#sudo systemctl start nodeserver.service && journalctl -fexu nodeserver.service >run.out 2>run.err &
+forever node /webapp/bin/www &

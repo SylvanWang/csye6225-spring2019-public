@@ -13,6 +13,33 @@ var pool = mysql.createPool({
     password: process.env.PASS
 });
 console.log(process.env);
+var sqltable1 = 'create table if not exists users(id int(11) not null auto_increment, username VARCHAR(45), password VARCHAR(100), constraint pk_example primary key (id))';
+pool.query(sqltable1, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!");
+});
+
+var sqltable2 = 'create table if not exists notes(id VARCHAR(100) not null, content VARCHAR(45), title VARCHAR(45), createdOn VARCHAR(45), lastUpdatedOn VARCHAR(45), creator_id VARCHAR(45) not null, constraint pk_example primary key (id))';
+pool.query(sqltable2, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!!");
+});
+
+var sqltable3 = 'create table if not exists attachments(id VARCHAR(100) not null, url VARCHAR(245), _key VARCHAR(245), noteId VARCHAR(100) not null)';
+pool.query(sqltable3, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!!!");
+});
+
 var sql = 'SELECT * FROM users';
 pool.query(sql, function (err, result) {
     if (err) {

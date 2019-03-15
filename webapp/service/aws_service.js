@@ -14,7 +14,7 @@ getFileData = (files) => {
                 } else {
 
                     let promiseArray = files.map(f => {
-                        let params = { Bucket: data.Buckets[0].Name, Key:`${Date.now()}-${f.originalname}`, Body: f.buffer };
+                        let params = { Bucket:S3BUCKET, Key:`${Date.now()}-${f.originalname}`, Body: f.buffer };
                         console.log(params);
                         return s3.upload(params).promise();
                     });
@@ -48,8 +48,8 @@ updateFile = (data, file) => {
                 } else {
                     console.log("000000000")
                     console.log(file)
-                    let params1 = {Bucket: bucket.Buckets[0].Name, Key: data[0]._key};
-                    let params = {Bucket: bucket.Buckets[0].Name, Key: `${Date.now()}-${file.originalname}`, Body: file.buffer};
+                    let params1 = {Bucket: S3BUCKET, Key: data[0]._key};
+                    let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${file.originalname}`, Body: file.buffer};
 
                     let result1 = s3.deleteObject(params1).promise();
                     let result = s3.upload(params).promise();
@@ -81,9 +81,9 @@ deleteFileS3 = (key) => {
                 if (err) {
                     console.log("Error", err);
                 } else {
-                    let params = {Bucket: data.Buckets[0].Name, Key: key};
+                    let params = {Bucket: S3BUCKET, Key: key};
                     let result = s3.deleteObject(params).promise();
-
+data.Buckets[0].Name
                     result.then(result => res()).catch(err => rej(err));
                 }
             });

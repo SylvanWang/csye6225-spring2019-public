@@ -76,6 +76,7 @@
                 { "Fn::Sub" : ["echo export PASS=${DatabasePass} >> webappEnv.sh", { "DatabasePass" : {"Ref" : "DBPassword" }}]},
                 { "Fn::Sub" : ["echo export DB_HOST=${DatabaseHost} >> webappEnv.sh", { "DatabaseHost" : {"Fn::GetAtt": ["myRDSInstance","Endpoint.Address"]}}]},
                 { "Fn::Sub" : ["echo export PORT=${ApplicationPort} >> webappEnv.sh", { "ApplicationPort" : {"Ref" : "Appport" }}]},
+                { "Fn::Sub" : ["echo export S3BUCKET=${S3BUCKET} >> webappEnv.sh", { "S3BUCKET" : {"Ref":"myS3Bucket"}}]},
                 "echo export NODE_ENV=dev >> webappEnv.sh",
 
                 "sudo groupadd nodeUser",

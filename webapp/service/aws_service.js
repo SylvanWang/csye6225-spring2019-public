@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const {S3BUCKET} = require('../config')[process.env.NODE_ENV];
+const { S3BUCKET } = require('../config')[process.env.NODE_ENV];
 const fs = require('fs');
 
 getFileData = (files) => {

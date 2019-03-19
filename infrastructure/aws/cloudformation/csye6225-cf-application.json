@@ -286,6 +286,11 @@
       "Type": "AWS::IAM::Role",
       "Properties": {
         "RoleName": "CodeDeployEC2ServiceRole",
+        "ManagedPolicyArns": [
+          {
+            "Ref": "CloudWatchAgentServerPolicyARN"
+          }
+        ],
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -301,34 +306,7 @@
               ]
             }
           ]
-        },
-        "Policies": [ {
-          "PolicyName": "CloudWatchAgentServerPolicy",
-          "PolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [ {
-              "Effect": "Allow",
-              "Action": [
-                "cloudwatch:PutMetricData",
-                "ec2:DescribeTags",
-                "logs:PutLogEvents",
-                "logs:DescribeLogStreams",
-                "logs:DescribeLogGroups",
-                "logs:CreateLogStream",
-                "logs:CreateLogGroup"
-              ],
-              "Resource": "*"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ssm:GetParameter"
-              ],
-            "Resource": "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
-            }
-            ]
-          }
-        } ]
+        }
       }
     },
       "CircleCICodeDeploy": {
@@ -590,6 +568,10 @@
     "AWSCodeDeployRoleARN": {
       "Type": "String",
       "Default": "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+    },
+    "CloudWatchAgentServerPolicyARN": {
+      "Type": "String",
+      "Default": "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
     },
     "Appport" : {
       "Type" : "Number",

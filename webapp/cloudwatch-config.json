@@ -12,7 +12,8 @@
           {
             "file_path": "/opt/webapps/**.log",
             "log_group_name": "csye6225_spring2019",
-            "log_stream_name": "webapp"
+            "log_stream_name": "webapp",
+            "timestamp_format": "%H:%M:%S %y %b %-d"
           }
         ]
       }
@@ -23,8 +24,8 @@
     "metrics_collected":{
       "statsd":{
         "service_address":":8125",
-        "metrics_collection_interval":5,
-        "metrics_aggregation_interval":20
+        "metrics_collection_interval":10,
+        "metrics_aggregation_interval":0
       }
     }
   }

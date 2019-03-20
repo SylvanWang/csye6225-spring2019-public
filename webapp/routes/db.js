@@ -235,6 +235,7 @@ function deleteNoteByNoteId(id, userId) {
     var promise = new Promise(function (resolve) {
         var sqlSearch = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
         var sqlDelete = 'DELETE FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
+        var attachmentsDelete = 'DELETE FROM attachments WHERE noteId="' + id + '"';
 
         pool.query(sqlSearch, function (err, result) {
             if (err) {
@@ -242,15 +243,21 @@ function deleteNoteByNoteId(id, userId) {
                 return;
             }
             if (result[0]) {
-                pool.query(sqlDelete, function (err) {
+                pool.query(attachmentsDelete, function (err) {
                     if (err) {
                         console.log('[DELETE ERROR] - ', err.message);
                         return;
                     }
-                    console.log('--------------------------DELETE----------------------------');
-                    console.log(id + " " + userId);
-                    console.log('-----------------------------------------------------------------\n\n');
-                    resolve(true);
+                    pool.query(sqlDelete, function (err) {
+                        if (err) {
+                            console.log('[DELETE ERROR] - ', err.message);
+                            return;
+                        }
+                        console.log('--------------------------DELETE----------------------------');
+                        console.log(id + " " + userId);
+                        console.log('-----------------------------------------------------------------\n\n');
+                        resolve(true);
+                    });
                 });
             } else {
                 resolve(false);
@@ -368,7 +375,7 @@ function updateAttchment(id, url, key, noteId) {
 function deleteAttachmentById(id, noteId) {
     var promise = new Promise(function (resolve) {
         var sqlSearch = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
-        var sqlDelete = 'DELETE FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
+        var attachmentsDelete = 'DELETE FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
 
         pool.query(sqlSearch, function (err, result) {
             if (err) {
@@ -376,7 +383,7 @@ function deleteAttachmentById(id, noteId) {
                 return;
             }
             if (result[0]) {
-                pool.query(sqlDelete, function (err) {
+                pool.query(attachmentsDelete, function (err) {
                     if (err) {
                         console.log('[DELETE ERROR] - ', err.message);
                         return;

@@ -46,10 +46,6 @@ pool.query(sql, function (err, result) {
         console.log('[SELECT ERROR] - ', err.message);
         return;
     }
-
-    console.log('--------------------------SELECT----------------------------');
-    console.log(result);
-    console.log('------------------------------------------------------------\n\n');
 });
 
 function bcrypthash(password) {
@@ -78,9 +74,6 @@ function createUser(username, password) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(username + ' ' + password);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -88,20 +81,12 @@ function createUser(username, password) {
 }
 
 function checkUser(username, password) {
-    console.log(username + ' ' + password);
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
         pool.query(sql, function (err, result) {
             if (result[0]) {
                 if (bcrypt.compareSync(password, result[0].password)) {
-
-                    console.log('--------------------------SEARCH----------------------------');
-                    console.log(result);
-                    console.log('-----------------------------------------------------------------\n\n');
-
                     resolve(true);
-
-
                 } else {
                     console.log('[SEARCH ERROR] - ', "Auth failed");
                     resolve(false);
@@ -131,9 +116,6 @@ function searchUser(username) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result[0]) {
                 resolve(true);
             } else {
@@ -147,17 +129,12 @@ function searchUser(username) {
 function getIdByUsername(username) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result[0]) {
-                console.log("this is id:" + result[0].id);
                 resolve(result[0].id);
             } else {
                 console.log('[SEARCH ERROR] - ', "No id can be found");
@@ -176,9 +153,6 @@ function getNotesById(id) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result);
             } else {
@@ -199,9 +173,6 @@ function getNoteByNoteId(id, userId) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -222,9 +193,6 @@ function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(id + " " + content + " " + title + " " + createdOn + " " + lastUpdatedOn + " " + userId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -253,9 +221,6 @@ function deleteNoteByNoteId(id, userId) {
                             console.log('[DELETE ERROR] - ', err.message);
                             return;
                         }
-                        console.log('--------------------------DELETE----------------------------');
-                        console.log(id + " " + userId);
-                        console.log('-----------------------------------------------------------------\n\n');
                         resolve(true);
                     });
                 });
@@ -280,9 +245,6 @@ function updateNoteByNoteId(id, content, title, lastUpdatedOn, userId) {
                 console.log('[UPDATE ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------UPDATE----------------------------');
-            console.log(id + " " + content + " " + title + " " + lastUpdatedOn + " " + userId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -293,15 +255,11 @@ function createAttachment(id, url, key, noteId) {
     var promise = new Promise(function (resolve) {
         var sql = 'INSERT INTO attachments(id, url, _key, noteId) VALUES("' +
             id + '","' + url + '","' + key + '","' + noteId + '")';
-        console.log(sql);
         pool.query(sql, function (err) {
             if (err) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(id + " " + url + " " + key + " " + noteId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -311,15 +269,11 @@ function createAttachment(id, url, key, noteId) {
 function getAllAttachments(id) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM attachments WHERE noteId="' + id + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -334,15 +288,11 @@ function getAllAttachments(id) {
 function findAttachmentByIds(id, noteId) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -363,9 +313,6 @@ function updateAttchment(id, url, key, noteId) {
                 console.log('[UPDATE ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------UPDATE----------------------------');
-            console.log(id + " " + url + " " + key + " " + noteId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -388,9 +335,6 @@ function deleteAttachmentById(id, noteId) {
                         console.log('[DELETE ERROR] - ', err.message);
                         return;
                     }
-                    console.log('--------------------------DELETE----------------------------');
-                    console.log(id + " " + noteId);
-                    console.log('-----------------------------------------------------------------\n\n');
                     resolve(true);
                 });
             } else {

@@ -17,7 +17,6 @@ function getMyNotes(req, res) {
                 notesPromise.then(function (notes) {
                         if (notes.length !== 0) {
                             console.log('search success!');
-                            console.log(notes);
                             res.status(200).json(notes);
                         } else {
                             console.log('search fail!');
@@ -40,7 +39,6 @@ function updateNote(req, res) {
     let currentDate = (new Date()).toJSON().slice(0, 19).replace(/[-T]/g, ':');
 
     let noteId = req.params.id;
-    console.log("nodeId: " + noteId);
 
     if (res.locals !== undefined) {
         var idPromise = DB.getIdByUsername(res.locals.user);
@@ -48,7 +46,6 @@ function updateNote(req, res) {
             if (id != null) {
                 var notePromise = DB.updateNoteByNoteId(noteId,
                     req.body.content, req.body.title, currentDate, id);
-                console.log("Id: " + id);
                 notePromise.then(function (value) {
                     console.log(value);
                     if (value) {
@@ -73,17 +70,15 @@ function updateNote(req, res) {
 function getMyNote(req, res) {
 
     let noteId = req.params.id;
-    console.log("nodeId: " + noteId);
 
     if (res.locals !== undefined) {
         var idPromise = DB.getIdByUsername(res.locals.user);
         idPromise.then(function (id) {// value is id
             if (id != null) {
                 var notePromise = DB.getNoteByNoteId(noteId, id);
-                console.log("Id: " + id);
                 notePromise.then(function (note) {
                     console.log("Note: " + note);
-                    if (note.length != 0) {
+                    if (note.length !== 0) {
                         console.log('search success!');
                         return res.status(200).send({
                             status: 200,
@@ -139,9 +134,7 @@ function deleteNote(req, res) {
         idPromise.then(function (id) {// value is id
             if (id != null) {
                 var notePromise = DB.deleteNoteByNoteId(noteId, id);
-                console.log("Id: " + id);
                 notePromise.then(function (value) {
-                    console.log(value);
                     if (value) {
                         console.log('delete success!');
                         return res.status(200).send({
@@ -308,11 +301,7 @@ deleteAttachments = (req, res) => {
 };
 
 addAttachments = (req, res) => {
-    console.log("nodeId: ");
-    console.log("nodeId: " + req.params.id);
-
     let noteId = req.params.id;
-    console.log("req: " + req.files);
 
     s3Service.getFileData(req.files).then(data => {
         console.log("-------------------------------------------");
@@ -323,7 +312,6 @@ addAttachments = (req, res) => {
 
         Promise.all(promiseArray)
             .then(result => {
-                console.log('Result', result);
                 res.status(200).send({status: 200, message: `Attachment added for note ${noteId}`});
             })
             .catch(error => {

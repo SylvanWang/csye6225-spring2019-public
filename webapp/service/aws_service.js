@@ -4,13 +4,11 @@ const { S3BUCKET } = require('../config')[process.env.NODE_ENV];
 const fs = require('fs');
 
 getFileData = (files) => {
-    console.log(files);
     return new Promise((res, rej) => {
         let fileData;
         if (process.env.NODE_ENV === 'dev') {
             let promiseArray = files.map(f => {
                 let params = {Bucket: S3BUCKET, Key: `${Date.now()}-${f.originalname}`, Body: f.buffer};
-                console.log(params);
                 return s3.upload(params).promise();
             });
 
@@ -18,7 +16,6 @@ getFileData = (files) => {
                 fileData = result.map(file => {
                     return {"location": file.Location, "key": file.Key}
                 });
-                console.log('S3 data ->', fileData);
                 res(fileData);
             }).catch(err =>
                 rej(err)
@@ -28,7 +25,6 @@ getFileData = (files) => {
             fileData = files.map(file => {
                 return {"location": file.path, "key": file.filename}
             });
-            console.log('Local data ->', fileData);
             res(fileData);
         }
     });
@@ -49,7 +45,6 @@ updateFile = (data, file) => {
 
             result.then(result => {
                 let resultData = {"location": result.Location, "key": result.Key};
-                console.log('Filedata', resultData)
                 res(resultData);
             }).catch(err =>
                 rej(err)
@@ -58,7 +53,6 @@ updateFile = (data, file) => {
         } else if (process.env.NODE_ENV === 'default') {
             deleteFileS3(data[0]._key).then(() => {
                 fileData = {"location": file.path, key: `${Date.now()}-${file.originalname}`};
-                console.log('Filedata', fileData);
                 res(fileData);
             })
         }

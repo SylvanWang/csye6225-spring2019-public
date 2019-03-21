@@ -28,7 +28,7 @@ const upload = multer({ storage: STORAGE, fileFilter: docFilter, preservePath: t
 router.use((req, res, next) => {
     console.log(req.method, req.url);
     sdc.publish=true;
-    sdc.increment(req.url);
+    sdc.increment(req.method+" "+req.url);
     next();
 });
 

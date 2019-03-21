@@ -17,7 +17,6 @@ function getMyNotes(req, res) {
                 notesPromise.then(function (notes) {
                         if (notes.length !== 0) {
                             console.log('search success!');
-                            console.log(notes);
                             res.status(200).json(notes);
                         } else {
                             console.log('search fail!');
@@ -37,18 +36,16 @@ function getMyNotes(req, res) {
 }
 
 function updateNote(req, res) {
-let currentDate = (new Date()).toJSON().slice(0, 19).replace(/[-T]/g, ':');
+    let currentDate = (new Date()).toJSON().slice(0, 19).replace(/[-T]/g, ':');
 
     let noteId = req.params.id;
-    console.log("nodeId: " + noteId);
 
     if (res.locals !== undefined) {
         var idPromise = DB.getIdByUsername(res.locals.user);
         idPromise.then(function (id) {// value is id
             if (id != null) {
-                var notePromise = DB.updateNoteByNoteId(noteId, 
-                                req.body.content, req.body.title, currentDate, id);
-                console.log("Id: " + id);
+                var notePromise = DB.updateNoteByNoteId(noteId,
+                    req.body.content, req.body.title, currentDate, id);
                 notePromise.then(function (value) {
                     console.log(value);
                     if (value) {
@@ -67,22 +64,21 @@ let currentDate = (new Date()).toJSON().slice(0, 19).replace(/[-T]/g, ':');
                 });
             }
         });
-    } }
+    }
+}
 
 function getMyNote(req, res) {
 
     let noteId = req.params.id;
-    console.log("nodeId: " + noteId);
 
     if (res.locals !== undefined) {
         var idPromise = DB.getIdByUsername(res.locals.user);
         idPromise.then(function (id) {// value is id
             if (id != null) {
                 var notePromise = DB.getNoteByNoteId(noteId, id);
-                console.log("Id: " + id);
                 notePromise.then(function (note) {
                     console.log("Note: " + note);
-                    if (note.length != 0) {
+                    if (note.length !== 0) {
                         console.log('search success!');
                         return res.status(200).send({
                             status: 200,
@@ -121,16 +117,24 @@ function createNote(req, res) {
 
 function deleteNote(req, res) {
     let noteId = req.params.id;
-    console.log("nodeId: " + noteId);
-
     if (res.locals !== undefined) {
         var idPromise = DB.getIdByUsername(res.locals.user);
+        idPromise.then(function () {
+            DB.getAllAttachments(noteId)
+                .then(data => {
+                    var i = 0;
+                    while (i < data.length) {
+                        if (data[i]._key) {
+                            s3Service.deleteFileS3(data[i]._key);
+                        }
+                        i++;
+                    }
+                });
+        });
         idPromise.then(function (id) {// value is id
             if (id != null) {
                 var notePromise = DB.deleteNoteByNoteId(noteId, id);
-                console.log("Id: " + id);
                 notePromise.then(function (value) {
-                    console.log(value);
                     if (value) {
                         console.log('delete success!');
                         return res.status(200).send({
@@ -147,6 +151,7 @@ function deleteNote(req, res) {
                 });
             }
         });
+
     }
 }
 
@@ -182,7 +187,7 @@ function createUser(req, res) {
                             res.status(200).send({status: 200, message: "User created"});
                         } else {
                             console.log('insert fail!');
-                            res.status(400).send({status: 400, message:"Failed to create user"});
+                            res.status(400).send({status: 400, message: "Failed to create user"});
                         }
                     });
                 }
@@ -230,7 +235,7 @@ function auth(req, res, next) {
             if (!user[1])
                 return unauthorized(res);
 
-        if (user[0]==="admin" && user[1]==="admin") {
+        if (user[0] === "admin" && user[1] === "admin") {
             res.locals.user = user[0];
             return next();
         }
@@ -256,9 +261,8 @@ function auth(req, res, next) {
 }
 
 
-
 updateAttachments = (req, res) => {
-    let { id, attachmentId } = req.params;
+    let {id, attachmentId} = req.params;
     DB.findAttachmentByIds(attachmentId, id).then(data => {
         s3Service.updateFile(data, req.file).then(fdata => {
             DB.updateAttchment(attachmentId, fdata.location, fdata.key, id).then(data => {
@@ -272,7 +276,7 @@ updateAttachments = (req, res) => {
 };
 
 deleteAttachments = (req, res) => {
-    let { id, attachmentId } = req.params;
+    let {id, attachmentId} = req.params;
 
     DB.findAttachmentByIds(attachmentId, id)
         .then(data => {
@@ -297,11 +301,7 @@ deleteAttachments = (req, res) => {
 };
 
 addAttachments = (req, res) => {
-    console.log("nodeId: ");
-    console.log("nodeId: " + req.params.id);
-
     let noteId = req.params.id;
-    console.log("req: " + req.files);
 
     s3Service.getFileData(req.files).then(data => {
         console.log("-------------------------------------------");
@@ -312,7 +312,6 @@ addAttachments = (req, res) => {
 
         Promise.all(promiseArray)
             .then(result => {
-                console.log('Result', result);
                 res.status(200).send({status: 200, message: `Attachment added for note ${noteId}`});
             })
             .catch(error => {

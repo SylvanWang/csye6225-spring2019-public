@@ -3,5 +3,5 @@ source /home/centos/.bash_profile
 cd ~/node_logs
 nohup node /webapp/bin/www > webapp.log 2> webapp_err.log &
 
-sudo systemctl enable awslogs.service
-sudo systemctl start awslogs.service
+sudo systemctl enable amazon-cloudwatch-agent.service
+sudo systemctl start amazon-cloudwatch-agent.service

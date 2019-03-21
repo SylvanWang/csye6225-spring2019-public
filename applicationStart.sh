@@ -1,5 +1,7 @@
 #!/bin/bash
 source /home/centos/.bash_profile
+sudo systemctl start cloudwatch.service
+
 cd /webapp
 mkdir node_logs
 cd node_logs

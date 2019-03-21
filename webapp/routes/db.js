@@ -167,7 +167,6 @@ function getNotesById(id) {
 function getNoteByNoteId(id, userId) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);

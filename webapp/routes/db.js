@@ -5,7 +5,6 @@ var mysql = require('mysql');
 require('../config');
 const NoteModel = require('../models/noteModel');
 
-
 var pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -13,18 +12,40 @@ var pool = mysql.createPool({
     user: process.env.USER_NAME,
     password: process.env.PASS
 });
-console.log(process.env  );
-var sql = 'SELECT * FROM users';
+console.log(process.env);
+var sqltable1 = 'create table if not exists users(id int(11) not null auto_increment, username VARCHAR(45), password VARCHAR(100), constraint pk_example primary key (id))';
+pool.query(sqltable1, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!");
+});
 
+var sqltable2 = 'create table if not exists notes(id VARCHAR(100) not null, content VARCHAR(45), title VARCHAR(45), createdOn VARCHAR(45), lastUpdatedOn VARCHAR(45), creator_id VARCHAR(45) not null, constraint pk_example primary key (id))';
+pool.query(sqltable2, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!!");
+});
+
+var sqltable3 = 'create table if not exists attachments(id VARCHAR(100) not null, url VARCHAR(245), _key VARCHAR(245), noteId VARCHAR(100) not null)';
+pool.query(sqltable3, function (err, result) {
+    if (err) {
+        console.log('[CREATE TABLE ERROR] - ', err.message);
+        return;
+    }
+    console.log("Table created!!!");
+});
+
+var sql = 'SELECT * FROM users';
 pool.query(sql, function (err, result) {
     if (err) {
         console.log('[SELECT ERROR] - ', err.message);
         return;
     }
-
-    console.log('--------------------------SELECT----------------------------');
-    console.log(result);
-    console.log('------------------------------------------------------------\n\n');
 });
 
 function bcrypthash(password) {
@@ -53,9 +74,6 @@ function createUser(username, password) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(username + ' ' + password);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -63,20 +81,12 @@ function createUser(username, password) {
 }
 
 function checkUser(username, password) {
-    console.log(username + ' ' + password);
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
         pool.query(sql, function (err, result) {
             if (result[0]) {
                 if (bcrypt.compareSync(password, result[0].password)) {
-
-                    console.log('--------------------------SEARCH----------------------------');
-                    console.log(result);
-                    console.log('-----------------------------------------------------------------\n\n');
-
                     resolve(true);
-
-
                 } else {
                     console.log('[SEARCH ERROR] - ', "Auth failed");
                     resolve(false);
@@ -106,9 +116,6 @@ function searchUser(username) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result[0]) {
                 resolve(true);
             } else {
@@ -122,17 +129,12 @@ function searchUser(username) {
 function getIdByUsername(username) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM users WHERE username="' + username + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result[0]) {
-                console.log("this is id:" + result[0].id);
                 resolve(result[0].id);
             } else {
                 console.log('[SEARCH ERROR] - ', "No id can be found");
@@ -151,9 +153,6 @@ function getNotesById(id) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result);
             } else {
@@ -168,15 +167,11 @@ function getNotesById(id) {
 function getNoteByNoteId(id, userId) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -197,9 +192,6 @@ function createNote(id, content, title, createdOn, lastUpdatedOn, userId) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(id + " " + content + " " + title + " " + createdOn + " " + lastUpdatedOn + " " + userId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -210,6 +202,7 @@ function deleteNoteByNoteId(id, userId) {
     var promise = new Promise(function (resolve) {
         var sqlSearch = 'SELECT * FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
         var sqlDelete = 'DELETE FROM notes WHERE id="' + id + '" AND creator_id="' + userId + '"';
+        var attachmentsDelete = 'DELETE FROM attachments WHERE noteId="' + id + '"';
 
         pool.query(sqlSearch, function (err, result) {
             if (err) {
@@ -217,15 +210,18 @@ function deleteNoteByNoteId(id, userId) {
                 return;
             }
             if (result[0]) {
-                pool.query(sqlDelete, function (err) {
+                pool.query(attachmentsDelete, function (err) {
                     if (err) {
                         console.log('[DELETE ERROR] - ', err.message);
                         return;
                     }
-                    console.log('--------------------------DELETE----------------------------');
-                    console.log(id + " " + userId);
-                    console.log('-----------------------------------------------------------------\n\n');
-                    resolve(true);
+                    pool.query(sqlDelete, function (err) {
+                        if (err) {
+                            console.log('[DELETE ERROR] - ', err.message);
+                            return;
+                        }
+                        resolve(true);
+                    });
                 });
             } else {
                 resolve(false);
@@ -248,9 +244,6 @@ function updateNoteByNoteId(id, content, title, lastUpdatedOn, userId) {
                 console.log('[UPDATE ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------UPDATE----------------------------');
-            console.log(id + " " + content + " " + title + " " + lastUpdatedOn + " " + userId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -261,15 +254,11 @@ function createAttachment(id, url, key, noteId) {
     var promise = new Promise(function (resolve) {
         var sql = 'INSERT INTO attachments(id, url, _key, noteId) VALUES("' +
             id + '","' + url + '","' + key + '","' + noteId + '")';
-        console.log(sql);
         pool.query(sql, function (err) {
             if (err) {
                 console.log('[INSERT ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------INSERT----------------------------');
-            console.log(id + " " + url + " " + key + " " + noteId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -279,15 +268,11 @@ function createAttachment(id, url, key, noteId) {
 function getAllAttachments(id) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM attachments WHERE noteId="' + id + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -302,15 +287,11 @@ function getAllAttachments(id) {
 function findAttachmentByIds(id, noteId) {
     var promise = new Promise(function (resolve) {
         var sql = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
-        console.log(sql);
         pool.query(sql, function (err, result) {
             if (err) {
                 console.log('[SEARCH ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------SEARCH----------------------------');
-            console.log(result);
-            console.log('-----------------------------------------------------------------\n\n');
             if (result) {
                 resolve(result)
             } else {
@@ -331,9 +312,6 @@ function updateAttchment(id, url, key, noteId) {
                 console.log('[UPDATE ERROR] - ', err.message);
                 return;
             }
-            console.log('--------------------------UPDATE----------------------------');
-            console.log(id + " " + url + " " + key + " " + noteId);
-            console.log('-----------------------------------------------------------------\n\n');
             resolve(true);
         });
     });
@@ -343,7 +321,7 @@ function updateAttchment(id, url, key, noteId) {
 function deleteAttachmentById(id, noteId) {
     var promise = new Promise(function (resolve) {
         var sqlSearch = 'SELECT * FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
-        var sqlDelete = 'DELETE FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
+        var attachmentsDelete = 'DELETE FROM attachments WHERE id="' + id + '" AND noteId="' + noteId + '"';
 
         pool.query(sqlSearch, function (err, result) {
             if (err) {
@@ -351,14 +329,11 @@ function deleteAttachmentById(id, noteId) {
                 return;
             }
             if (result[0]) {
-                pool.query(sqlDelete, function (err) {
+                pool.query(attachmentsDelete, function (err) {
                     if (err) {
                         console.log('[DELETE ERROR] - ', err.message);
                         return;
                     }
-                    console.log('--------------------------DELETE----------------------------');
-                    console.log(id + " " + noteId);
-                    console.log('-----------------------------------------------------------------\n\n');
                     resolve(true);
                 });
             } else {

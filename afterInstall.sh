@@ -1,6 +1,13 @@
 #!/bin/bash
-sudo chmod 777 -R /opt/webapps
-cd /webapp
-sudo npm install
-cd webapp/bin
-sudo node www
+source /home/centos/.bash_profile
+sudo chmod 777 -R /webapp
+sudo pkill node
+sudo systemctl daemon-reload
+cd webapp
+npm install
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+    -a fetch-config \
+    -m ec2 \
+    -c file:/webapp/cloudwatch-config.json \
+    -s

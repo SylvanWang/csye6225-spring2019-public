@@ -1,6 +1,6 @@
 #!/bin/bash
 
-imageId=$(aws ec2 describe-images --filters Name=name,Values="centos_7" | jq '.Images[0].ImageId')
+imageId=$(aws ec2 describe-images --filters Name=description,Values="Centos AMI for CSYE 6225 - Spring 2019" | jq '.Images[0].ImageId')
 echo $imageId
 
 vpcId=$(aws ec2  describe-vpcs --filters Name=tag:aws:cloudformation:logical-id,Values="myVPC" |jq '.Vpcs[0].VpcId')
@@ -18,6 +18,9 @@ echo $privateSubnetId2
 domainName=$(aws route53 list-hosted-zones | jq '.HostedZones[0].Name' | tr -d '"')
 echo $domainName
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+echo "$AWS_ACCOUNT_ID"
+
 if [ ! -z "$domainName" ]
 then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
@@ -28,11 +31,11 @@ then
                         ParameterKey=publicSubnetId1,ParameterValue=$publicSubnetId1 \
                         ParameterKey=privateSubnetId1,ParameterValue=$privateSubnetId1 \
                         ParameterKey=privateSubnetId2,ParameterValue=$privateSubnetId2 \
+                        ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DBport,ParameterValue="3306"\
                         ParameterKey=DomainName,ParameterValue=$domainName \
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\
                         ParameterKey=EC2TagValue,ParameterValue="csye6225"\
-                        ParameterKey=CodeDeployEC2ServiceRole,ParameterValue="CodeDeployEC2ServiceRole" \
                         ParameterKey=Appport,ParameterValue="3000";
             aws cloudformation wait stack-create-complete --stack-name $1)
 

@@ -44,8 +44,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-console.log(process.env);
-
-//const expressServer = app.listen(process.env.PORT, () => console.log(`Application running in ${process.env.NODE_ENV}, listening on port ${process.env.PORT}!`));
-
 module.exports = app;

@@ -510,7 +510,24 @@
             }
           ]
         }
-      },
+      }
+  },
+  "PasswordResetSNSTopic": {
+    "Type": "AWS::SNS::Topic",
+    "Properties": {
+      "TopicName": "password_reset",
+      "Subscription": [
+        {
+          "Endpoint": {
+            "Fn::GetAtt": [
+              "LambdaEmailApplication",
+              "Arn"
+            ]
+          },
+          "Protocol": "lambda"
+        }
+      ]
+    }
   },
   "Parameters": {
     "imageId": {

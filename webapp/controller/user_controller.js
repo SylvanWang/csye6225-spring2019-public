@@ -334,6 +334,31 @@ getAttachments = (req, res) => {
         res.status(400).send({status: 400, message: error.detail});
     });
 };
+
+resetPassword = (req, res) => {
+    if (req.params.email) {
+        DB.searchUser(req.params.email)
+            .then(function (data) {
+                if (data) {
+                    awsService.triggerSNSservice(req.params.email).then((result)=> {
+                        res.status(200).send({status: 200, message: result});
+                    }).catch((err)=> {
+                        res.status(401).send({status: 401, message: err});
+                    });
+                } else {
+                    throw new Error();
+                }
+            })
+            .catch(function (error) {
+                res.status(400).send({status: 400, message: error});
+            });
+    } else {
+        res.set('WWW-Authenticate', 'Basic');
+        res.status(401).send({status: 401, message: "Username is required and should be an email address"});
+    }
+};
+
+
 module.exports = {
     getTime,
     auth,
@@ -346,5 +371,6 @@ module.exports = {
     addAttachments,
     getAttachments,
     updateAttachments,
-    deleteAttachments
+    deleteAttachments,
+    resetPassword
 };

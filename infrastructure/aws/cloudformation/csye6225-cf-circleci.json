@@ -1,6 +1,34 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Resources": {
+		"LambdaExecutionRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": [
+									"lambda.amazonaws.com"
+								]
+							},
+							"Action": [
+								"sts:AssumeRole"
+							]
+						}
+					]
+				},
+				"ManagedPolicyArns": [
+					"arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole",
+					"arn:aws:iam::aws:policy/AmazonSESFullAccess",
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+					"arn:aws:iam::aws:policy/AmazonS3FullAccess"
+				]
+			}
+		},
 		"CircleciEc2Ami": {
 				"Type": "AWS::IAM::ManagedPolicy",
 				"Properties": {

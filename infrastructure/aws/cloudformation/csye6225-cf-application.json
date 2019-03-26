@@ -289,6 +289,8 @@
         "ManagedPolicyArns": [
           {
             "Ref": "CloudWatchAgentServerPolicyARN"
+          },{
+            "Ref": "AmazonSNSFullAccess"
           }
         ],
         "AssumeRolePolicyDocument": {
@@ -572,6 +574,10 @@
     "CloudWatchAgentServerPolicyARN": {
       "Type": "String",
       "Default": "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+    },
+    "AmazonSNSFullAccess": {
+      "Type": "String",
+      "Default": "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
     },
     "Appport" : {
       "Type" : "Number",

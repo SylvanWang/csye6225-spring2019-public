@@ -510,24 +510,55 @@
             }
           ]
         }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonSESFullAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        ]
       }
-  },
-  "PasswordResetSNSTopic": {
-    "Type": "AWS::SNS::Topic",
-    "Properties": {
-      "TopicName": "password_reset",
-      "Subscription": [
-        {
-          "Endpoint": {
-            "Fn::GetAtt": [
-              "LambdaEmailApplication",
-              "Arn"
-            ]
-          },
-          "Protocol": "lambda"
-        }
-      ]
-    }
+    },
+    "LambdaEmailApplication": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {"Fn::Join": ["",["code-deploy.",{"Ref": "DomainName"}]]},
+          "S3Key": {"Ref": "S3AppZipKey"}
+        },
+        "Description": "A lambda function for reset password email service",
+        "FunctionName": {"Ref": "LambdaFuntionName"},
+        "Handler": {"Ref": "LambdaFuntionHandlerName"},
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": {"Ref": "LambdaFuntionRuntime"},
+        "Timeout": 10
+      }
+    },
   },
   "Parameters": {
     "imageId": {
@@ -605,6 +636,22 @@
     "ApplicationName": {
         "Type": "String",
         "Default": "csye6225-webapp"
+    },
+    "S3AppZipKey": {
+      "Type": "String",
+      "Default": "csye6225-reset-email-service.zip"
+    },
+    "LambdaFuntionName": {
+      "Type": "String",
+      "Default": "default-name"
+    },
+    "LambdaFuntionHandlerName": {
+      "Type": "String",
+      "Default": "default-handler"
+    },
+    "LambdaFuntionRuntime": {
+      "Type": "String",
+      "Default": "default-runtime"
     }
   }
 }

@@ -33,8 +33,13 @@
       		"Type": "AWS::Lambda::Function",
       		"Properties": {
         		"Code": {
-          			"S3Bucket": {"Fn::Join": ["",["code-deploy.",{"Ref": "DomainName"}]]},
-          			"S3Key": {"Ref": "S3AppZipKey"}
+          			"ZipFile": { "Fn::Join": ["", [
+  				"var response = require('cfn-response');",
+  				"exports.handler = function(event, context) {",
+  				"  var responseData = 5;",
+  				"  response.send(event, context, response.SUCCESS, responseData);",
+  				"};"
+				]]}
         		},
         		"Description": "A lambda function for reset password email service",
         		"FunctionName": {"Ref": "LambdaFuntionName"},

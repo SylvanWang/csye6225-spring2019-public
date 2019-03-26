@@ -36,11 +36,7 @@ then
                         ParameterKey=DomainName,ParameterValue=$domainName \
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\
                         ParameterKey=EC2TagValue,ParameterValue="csye6225"\
-                        ParameterKey=Appport,ParameterValue="3000"\
-                        ParameterKey=S3AppZipKey,ParameterValue="csye6225-reset-email-service.zip" \
-                        ParameterKey=LambdaFuntionName,ParameterValue="passwordResetService" \
-                        ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.resetPassword" \
-                        ParameterKey=LambdaFuntionRuntime,ParameterValue="nodejs8.10";
+                        ParameterKey=Appport,ParameterValue="3000";
             aws cloudformation wait stack-create-complete --stack-name $1)
 
 else

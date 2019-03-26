@@ -24,7 +24,7 @@ jobs:
             - run: yarn test
             - run:
                 name: Install packages
-                command: sudo apt-get install wget zip unzip && sudo apt-get install python-dev && sudo apt-get install python-pip -y
+                command: sudo apt-get -y update && sudo apt-get install wget zip unzip && sudo apt-get install python-dev && sudo apt-get install python-pip -y
             - run:
                 name: Install awscli
                 command: sudo pip install awscli

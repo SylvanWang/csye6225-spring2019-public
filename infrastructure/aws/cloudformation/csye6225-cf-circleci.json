@@ -1,6 +1,39 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Resources": {
+		"PasswordResetSNSTopic": {
+			"Type": "AWS::SNS::Topic",
+			"Properties": {
+				"TopicName": "password_reset",
+				"Subscription": [
+					{
+						"Endpoint": {
+							"Fn::GetAtt": [
+								"LambdaEmailApplication",
+								"Arn"
+							]
+						},
+						"Protocol": "lambda"
+					}
+				]
+			}
+		},
+		"LambdaInvokePermission": {
+			"Type": "AWS::Lambda::Permission",
+			"Properties": {
+				"Action": "lambda:InvokeFunction",
+				"Principal": "sns.amazonaws.com",
+				"SourceArn": {
+					"Ref": "PasswordResetSNSTopic"
+				},
+				"FunctionName": {
+					"Fn::GetAtt": [
+						"LambdaEmailApplication",
+						"Arn"
+					]
+				}
+			}
+		},
 		"CircleciEc2Ami": {
 				"Type": "AWS::IAM::ManagedPolicy",
 				"Properties": {

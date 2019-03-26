@@ -29,6 +29,26 @@
 				]
 			}
 		},
+		"LambdaEmailApplication": {
+      		"Type": "AWS::Lambda::Function",
+      		"Properties": {
+        		"Code": {
+          			"S3Bucket": {"Fn::Join": ["",["code-deploy.",{"Ref": "DomainName"}]]},
+          			"S3Key": {"Ref": "S3AppZipKey"}
+        		},
+        		"Description": "A lambda function for reset password email service",
+        		"FunctionName": {"Ref": "LambdaFuntionName"},
+        		"Handler": {"Ref": "LambdaFuntionHandlerName"},
+        		"Role": {
+          			"Fn::GetAtt": [
+            		"LambdaExecutionRole",
+            		"Arn"
+          			]
+        		},
+        		"Runtime": {"Ref": "LambdaFuntionRuntime"},
+        		"Timeout": 10
+      		}
+    	},
 		"CircleciEc2Ami": {
 				"Type": "AWS::IAM::ManagedPolicy",
 				"Properties": {
@@ -82,41 +102,25 @@
 			}
 		},
 		"Parameters": {
-			"AWSREGION": {
-				"Type": "String",
-				"Default": "us-east-1"
-			},
-			"AWSACCOUNTID": {
-				"Type": "String",
-				"Default": "273656506688"
-			},
 			"DomainName": {
 				"Type": "String",
 				"Default": "csye6225-fall2019-default.me"
 			},
-			"CircleciUser": {
-				"Type": "String",
-				"Default": "circleci"
-			},
-			"AWSCodeDeployRoleARN": {
-				"Type": "String",
-				"Default": "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
-			},
-			"ApplicationName": {
-				"Type": "String",
-				"Default": "csye6225-spring2019"
-			},
-			"ApplicationKey": {
-				"Type": "String",
-				"Default": "ApplicationKey"
-			},
-			"EC2TagKey": {
-				"Type": "String",
-				"Default": "EC2TagKey"
-			},
-			"EC2TagValue": {
-				"Type": "String",
-				"Default": "EC2TagValue"
-			}
+    		"S3AppZipKey": {
+      			"Type": "String",
+      			"Default": "csye6225-reset-email-service.zip"
+    		},
+    		"LambdaFuntionName": {
+      			"Type": "String",
+      			"Default": "default-name"
+    		},
+    		"LambdaFuntionHandlerName": {
+      			"Type": "String",
+      			"Default": "default-handler"
+    		},
+    		"LambdaFuntionRuntime": {
+      			"Type": "String",
+      			"Default": "default-runtime"
+    		}
 		}
 }

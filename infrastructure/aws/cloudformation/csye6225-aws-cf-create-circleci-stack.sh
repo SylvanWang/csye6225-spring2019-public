@@ -31,7 +31,7 @@ then
                         ParameterKey=DomainName,ParameterValue=$DomainName \
                         ParameterKey=S3AppZipKey,ParameterValue="myLambda.zip" \
                         ParameterKey=LambdaFuntionName,ParameterValue="passwordResetService" \
-                        ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.resetPassword" \
+                        ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.handler" \
                         ParameterKey=LambdaFuntionRuntime,ParameterValue="nodejs8.10";
             aws cloudformation wait stack-create-complete --stack-name $1)
 

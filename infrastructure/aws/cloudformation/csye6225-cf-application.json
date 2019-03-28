@@ -637,7 +637,7 @@
     "AWSLambdaExecute": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": "CircleCI-Upload-To-S3",
+        "ManagedPolicyName": "AWSLambdaExecute3",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [

@@ -34,9 +34,8 @@ router.use((req, res, next) => {
 
 
 router.post('/user/register', user.createUser);
-router.use('/', user.auth);
-router.get('/', user.getTime);
-router.get('/a', db.getIdByUsername);
+router.get('/', user.auth, user.getTime);
+router.get('/a', user.auth, db.getIdByUsername);
 
 router.get('/note', user.auth, user.getMyNotes);
 router.put('/note/:id', user.auth, user.updateNote);
@@ -49,5 +48,6 @@ router.get('/note/:id/attachments', user.getAttachments);
 router.put('/note/:id/attachments/:attachmentId', upload.single('attachments'), user.updateAttachments);
 router.delete('/note/:id/attachments/:attachmentId', note.deleteAttachments);
 
+router.get('/reset/:email', user.resetPassword);
 
 module.exports = router;

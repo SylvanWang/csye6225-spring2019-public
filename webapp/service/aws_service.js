@@ -78,8 +78,43 @@ deleteFileS3 = (key) => {
     });
 };
 
+triggerSNSservice = (email) => {
+    return new Promise((res, rej) => {
+        let sns = new AWS.SNS({ region: "us-east-1" });
+
+        let getTopic = sns.listTopics({}).promise();
+
+        getTopic
+            .then(data => {
+                console.log("aws sns data: " + data);
+                console.log(data);
+                data.Topics.forEach(t => {
+                    if (t.TopicArn.includes("password_reset")) {
+                        let params = {
+                            Message: email,
+                            TargetArn: t.TopicArn
+                        };
+                        sns.publish(params, function(err, data) {
+                            if (err) {
+                                console.log(err, err.stack);
+                                rej(err);
+                            } else {
+                                console.log(data);
+                                res(data);
+                            }
+                        });
+                    }
+                });
+            }).catch(err => {
+            console.log(err);
+            rej(err);
+        });
+    });
+};
+
 module.exports = {
     getFileData,
     updateFile,
-    deleteFileS3
+    deleteFileS3,
+    triggerSNSservice
 };

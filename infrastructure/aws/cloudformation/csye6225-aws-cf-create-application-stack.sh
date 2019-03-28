@@ -21,6 +21,12 @@ echo $domainName
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
 echo "$AWS_ACCOUNT_ID"
 
+ApplicationName="csye6225-webapp"
+echo "$ApplicationName"
+
+RoleArn="arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+echo "$RoleArn"
+
 if [ ! -z "$domainName" ]
 then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
@@ -34,6 +40,10 @@ then
                         ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DBport,ParameterValue="3306"\
                         ParameterKey=DomainName,ParameterValue=$domainName \
+                        ParameterKey=S3AppZipKey,ParameterValue="myLambda.zip" \
+                        ParameterKey=LambdaFuntionName,ParameterValue="passwordResetService" \
+                        ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.handler" \
+                        ParameterKey=LambdaFuntionRuntime,ParameterValue="nodejs8.10"\
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\
                         ParameterKey=EC2TagValue,ParameterValue="csye6225"\
                         ParameterKey=Appport,ParameterValue="3000";

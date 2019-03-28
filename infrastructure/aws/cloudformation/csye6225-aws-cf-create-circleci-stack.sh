@@ -28,11 +28,7 @@ then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
             file://csye6225-cf-circleci.json \
             --parameters \
-                        ParameterKey=DomainName,ParameterValue=$DomainName \
-                        ParameterKey=S3AppZipKey,ParameterValue="myLambda.zip" \
-                        ParameterKey=LambdaFuntionName,ParameterValue="passwordResetService" \
-                        ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.handler" \
-                        ParameterKey=LambdaFuntionRuntime,ParameterValue="nodejs8.10";
+                        ParameterKey=DomainName,ParameterValue=$DomainName;
             aws cloudformation wait stack-create-complete --stack-name $1)
 
 else

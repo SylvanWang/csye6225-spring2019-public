@@ -216,7 +216,8 @@
             "Value": { "Ref": "EC2TagValue" },
             "PropagateAtLaunch": "true"
           }
-        ]
+        ],
+        "VPCZoneIdentifier": [{ "Ref": "privateSubnetId11" }, { "Ref": "privateSubnetId2" }]
       }
     },
     "WebServerScaleUpPolicy": {

@@ -309,7 +309,7 @@
     "ALBTargetGroup": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Properties": {
-        "HealthCheckIntervalSeconds": 60,
+        "HealthCheckIntervalSeconds": 10,
         "HealthCheckTimeoutSeconds": 5,
         "HealthyThresholdCount": 3,
         "Port": 3000,
@@ -884,6 +884,27 @@
           "Ref": "LambdaFuntionRuntime"
         },
         "Timeout": 10
+      }
+    },
+    "Route53RecordSetGroup" : {
+      "Type" : "AWS::Route53::RecordSetGroup",
+      "Properties" : {
+        "HostedZoneName" : {
+          "Ref": "DomainName"
+        },
+        "Comment" : "Zone apex alias targeted to Application Load Balancer.",
+        "RecordSets" : [
+          {
+            "Name" : {
+              "Ref": "DomainName"
+            },
+            "Type" : "A",
+            "AliasTarget" : {
+              "HostedZoneId" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "CanonicalHostedZoneID"] },
+              "DNSName" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "DNSName"] }
+            }
+          }
+        ]
       }
     }
   },

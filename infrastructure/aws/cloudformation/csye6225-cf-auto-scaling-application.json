@@ -309,7 +309,7 @@
     "ALBTargetGroup": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Properties": {
-        "HealthCheckIntervalSeconds": 60,
+        "HealthCheckIntervalSeconds": 10,
         "HealthCheckTimeoutSeconds": 5,
         "HealthyThresholdCount": 3,
         "Port": 3000,

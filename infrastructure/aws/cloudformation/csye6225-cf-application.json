@@ -316,7 +316,7 @@
           "Ref": "DBPassword"
         },
         "DBSubnetGroupName": "Subnet for RDS instances",
-        "PubliclyAccessible": "true",
+        "PubliclyAccessible": "false",
         "DBName": {
           "Ref": "DBName"
         },

@@ -209,15 +209,14 @@
         "LaunchConfigurationName": { "Ref": "AutoScalingLaunchConfig" },
         "MaxSize": "10",
         "MinSize": "3",
+        "DesiredCapacity": "3",
         "Tags": [
           {
             "Key": { "Ref": "EC2TagKey" },
             "Value": { "Ref": "EC2TagValue" },
             "PropagateAtLaunch": "true"
           }
-        ],
-        "TargetGroupARNs": [{ "Ref": "ALBTargetGroup" }],
-        "VPCZoneIdentifier": [{ "Ref": "subnetId1" }, { "Ref": "subnetId4" }]
+        ]
       }
     },
     "WebServerScaleUpPolicy": {

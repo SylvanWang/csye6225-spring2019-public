@@ -28,12 +28,7 @@ then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
             file://csye6225-cf-circleci.json \
             --parameters \
-                        ParameterKey=AWSREGION,ParameterValue=$AWS_REGION \
-                        ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
-                        ParameterKey=DomainName,ParameterValue=$DomainName \
-                        ParameterKey=CircleciUser,ParameterValue=$CircleciUser \
-                        ParameterKey=AWSCodeDeployRoleARN,ParameterValue=$RoleArn \
-                        ParameterKey=ApplicationName,ParameterValue=$ApplicationName;
+                        ParameterKey=DomainName,ParameterValue=$DomainName;
             aws cloudformation wait stack-create-complete --stack-name $1)
 
 else

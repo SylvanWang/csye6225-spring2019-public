@@ -277,6 +277,35 @@
         "ComparisonOperator": "LessThanThreshold"
       }
     },
+    "myApplicationLoadBalencer": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Name" : "ApplicationLoadBalancer",
+        "Type" : "application",
+        "Scheme" : "internet-facing",
+        "Subnets": [{ "Ref": "subnetId1" }, { "Ref": "subnetId4" }],
+        "SecurityGroups": [{ "Ref": "securityGroupELB" }]
+      }
+    },
+    "LoadBalencerListner": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "Certificates" : [
+          {
+            "CertificateArn" : {"Ref" : "SSLCertificateArn"}
+          }
+        ],
+        "DefaultActions": [
+          {
+            "Type": "forward",
+            "TargetGroupArn": { "Ref": "ALBTargetGroup" }
+          }
+        ],
+        "LoadBalancerArn": { "Ref": "myApplicationLoadBalencer" },
+        "Port": "443",
+        "Protocol": "HTTPS"
+      }
+    },
     "securityGroupELB": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {

@@ -12,7 +12,7 @@
         "InstanceProfileName": "EC2ServiceRole"
       }
     },
-   	"asg_launch_config": {
+   	"AutoScalingLaunchConfig": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
       "Properties": {
         "AssociatePublicIpAddress": true,
@@ -283,7 +283,7 @@
         "Name" : "ApplicationLoadBalancer",
         "Type" : "application",
         "Scheme" : "internet-facing",
-        "Subnets": [{ "Ref": "subnetId1" }, { "Ref": "subnetId4" }],
+        "Subnets": [{ "Ref": "privateSubnetId1" }, { "Ref": "privateSubnetId2" }],
         "SecurityGroups": [{ "Ref": "securityGroupELB" }]
       }
     },
@@ -1004,6 +1004,11 @@
     "LambdaFuntionRuntime": {
       "Type": "String",
       "Default": "default-runtime"
+    },
+    "SSLCertificateArn" : {
+      "Default": " ",
+      "Description": "The Amazon Resource Name (ARN) of the certificate to associate with the listener.",
+      "Type": "String"
     }
   }
 }

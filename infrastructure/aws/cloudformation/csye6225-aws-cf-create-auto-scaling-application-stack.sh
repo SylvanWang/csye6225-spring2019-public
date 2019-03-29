@@ -27,10 +27,12 @@ echo "$ApplicationName"
 RoleArn="arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 echo "$RoleArn"
 
+SSLCertificateArn=$(aws acm list-certificates --certificate-statuses ISSUED | jq -r '.CertificateSummaryList[0].CertificateArn')
+
 if [ ! -z "$domainName" ]
 then
       res=$(aws cloudformation create-stack --stack-name $1 --capabilities CAPABILITY_NAMED_IAM --template-body \
-            file://csye6225-cf-application.json \
+            file://csye6225-cf-auto-scaling-application.json \
             --parameters \
                         ParameterKey=imageId,ParameterValue=$imageId \
                         ParameterKey=vpcId,ParameterValue=$vpcId \
@@ -46,7 +48,8 @@ then
                         ParameterKey=LambdaFuntionRuntime,ParameterValue="nodejs8.10"\
                         ParameterKey=EC2TagKey,ParameterValue="csye6225"\
                         ParameterKey=EC2TagValue,ParameterValue="csye6225"\
-                        ParameterKey=Appport,ParameterValue="3000";
+                        ParameterKey=Appport,ParameterValue="3000"\
+                        ParameterKey=SSLCertificateArn,ParameterValue="$SSLCertificateArn";
             aws cloudformation wait stack-create-complete --stack-name $1)
 
 else

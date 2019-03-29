@@ -277,6 +277,79 @@
         "ComparisonOperator": "LessThanThreshold"
       }
     },
+    "myApplicationLoadBalencer": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Name" : "ApplicationLoadBalancer",
+        "Type" : "application",
+        "Scheme" : "internet-facing",
+        "Subnets": [{ "Ref": "subnetId1" }, { "Ref": "subnetId4" }],
+        "SecurityGroups": [{ "Ref": "securityGroupELB" }]
+      }
+    },
+    "LoadBalencerListner": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "Certificates" : [
+          {
+            "CertificateArn" : {"Ref" : "SSLCertificateArn"}
+          }
+        ],
+        "DefaultActions": [
+          {
+            "Type": "forward",
+            "TargetGroupArn": { "Ref": "ALBTargetGroup" }
+          }
+        ],
+        "LoadBalancerArn": { "Ref": "myApplicationLoadBalencer" },
+        "Port": "443",
+        "Protocol": "HTTPS"
+      }
+    },
+    "ALBTargetGroup": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "HealthCheckIntervalSeconds": 60,
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 3,
+        "Port": 3000,
+        "Protocol": "HTTP",
+        "UnhealthyThresholdCount": 3,
+        "VpcId": { "Ref": "vpcId" },
+        "Name": "TargetGrpLB",
+        "TargetType": "instance",
+        "HealthCheckPort": 3000
+      }
+    },
+    "securityGroupELB": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": "security-group-elb",
+        "GroupDescription": "Security Group for Load Balancer",
+        "VpcId": { "Ref": "vpcId" },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
     "csye6225webapp": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {

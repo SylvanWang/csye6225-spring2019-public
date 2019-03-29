@@ -12,48 +12,28 @@
         "InstanceProfileName": "EC2ServiceRole"
       }
     },
-    "myEC2": {
-      "Type": "AWS::EC2::Instance",
+   	"asg_launch_config": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
       "Properties": {
-        "KeyName": "csye6225",
-        "SubnetId": {
-          "Ref": "publicSubnetId1"
-        },
-        "SecurityGroupIds": [
-          {
-            "Fn::GetAtt": [
-              "csye6225webapp",
-              "GroupId"
-            ]
-          }
-        ],
+        "AssociatePublicIpAddress": true,
         "BlockDeviceMappings": [
           {
-            "DeviceName": "/dev/sda1",
+            "DeviceName": "/dev/sdm",
             "Ebs": {
               "VolumeType": "gp2",
-              "VolumeSize": "20"
+              "VolumeSize": "20",
+              "DeleteOnTermination": "true"
             }
           }
         ],
-        "DisableApiTermination": "false",
+        "IamInstanceProfile": { "Ref": "EC2ServiceRole" },
         "ImageId": {
           "Ref": "imageId"
         },
+        "InstanceMonitoring": false,
         "InstanceType": "t2.micro",
-        "IamInstanceProfile": {
-          "Ref": "EC2ServiceRole"
-        },
-        "Tags": [
-          {
-            "Key": {
-              "Ref": "EC2TagKey"
-            },
-            "Value": {
-              "Ref": "EC2TagValue"
-            }
-          }
-        ],
+        "KeyName": "csye6225",
+        "SecurityGroups": [{ "Fn::GetAtt": ["csye6225webapp", "GroupId"] }],
         "UserData": {
           "Fn::Base64": {
             "Fn::Join": [
@@ -220,6 +200,82 @@
             ]
           }
         }
+      }
+    },
+    "AutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "Cooldown": "60",
+        "LaunchConfigurationName": { "Ref": "AutoScalingLaunchConfig" },
+        "MaxSize": "10",
+        "MinSize": "3",
+        "Tags": [
+          {
+            "Key": { "Ref": "EC2TagKey" },
+            "Value": { "Ref": "EC2TagValue" },
+            "PropagateAtLaunch": "true"
+          }
+        ],
+        "TargetGroupARNs": [{ "Ref": "ALBTargetGroup" }],
+        "VPCZoneIdentifier": [{ "Ref": "subnetId1" }, { "Ref": "subnetId4" }]
+      }
+    },
+    "WebServerScaleUpPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": { "Ref": "AutoScalingGroup" },
+        "Cooldown": "60",
+        "ScalingAdjustment": "1"
+      }
+    },
+    "WebServerScaleDownPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": { "Ref": "AutoScalingGroup" },
+        "Cooldown": "60",
+        "ScalingAdjustment": "-1"
+      }
+    },
+    "CPUAlarmHigh": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmDescription": "Scale-up if CPU > 90% for 10 minutes",
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Statistic": "Average",
+        "Period": "300",
+        "EvaluationPeriods": "2",
+        "Threshold": "10",
+        "AlarmActions": [{ "Ref": "WebServerScaleUpPolicy" }],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": { "Ref": "AutoScalingGroup" }
+          }
+        ],
+        "ComparisonOperator": "GreaterThanThreshold"
+      }
+    },
+    "CPUAlarmLow": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmDescription": "Scale-down if CPU < 70% for 10 minutes",
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Statistic": "Average",
+        "Period": "300",
+        "EvaluationPeriods": "2",
+        "Threshold": "8",
+        "AlarmActions": [{ "Ref": "WebServerScaleDownPolicy" }],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": { "Ref": "AutoScalingGroup" }
+          }
+        ],
+        "ComparisonOperator": "LessThanThreshold"
       }
     },
     "csye6225webapp": {

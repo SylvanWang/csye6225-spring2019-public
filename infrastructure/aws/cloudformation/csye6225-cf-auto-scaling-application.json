@@ -885,6 +885,27 @@
         },
         "Timeout": 10
       }
+    },
+    "Route53RecordSetGroup" : {
+      "Type" : "AWS::Route53::RecordSetGroup",
+      "Properties" : {
+        "HostedZoneName" : {
+          "Ref": "DomainName"
+        },
+        "Comment" : "Zone apex alias targeted to Application Load Balancer.",
+        "RecordSets" : [
+          {
+            "Name" : {
+              "Ref": "DomainName"
+            },
+            "Type" : "A",
+            "AliasTarget" : {
+              "HostedZoneId" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "CanonicalHostedZoneID"] },
+              "DNSName" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "DNSName"] }
+            }
+          }
+        ]
+      }
     }
   },
   "Parameters": {

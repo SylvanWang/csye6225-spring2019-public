@@ -267,7 +267,7 @@
         "Statistic": "Average",
         "Period": "300",
         "EvaluationPeriods": "2",
-        "Threshold": "8",
+        "Threshold": "5",
         "AlarmActions": [{ "Ref": "WebServerScaleDownPolicy" }],
         "Dimensions": [
           {

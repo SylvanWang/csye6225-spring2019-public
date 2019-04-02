@@ -322,7 +322,6 @@
         "UnhealthyThresholdCount": 3,
         "VpcId": { "Ref": "vpcId" },
         "Name": "TargetGrpLB",
-        "TargetType": "instance",
         "HealthCheckPort": 3000
       }
     },

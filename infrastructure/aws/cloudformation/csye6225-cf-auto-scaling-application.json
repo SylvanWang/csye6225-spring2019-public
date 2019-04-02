@@ -210,10 +210,11 @@
         "MaxSize": "10",
         "MinSize": "3",
         "DesiredCapacity": "3",
-        "TargetGroupARNs":{
-        "Type": "forward",
-        "TargetGroupArn": { "Ref": "ALBTargetGroup" }
-},
+        "TargetGroupARNs":[
+          {
+           "Ref": "ALBTargetGroup"
+          }
+        ],
         "Tags": [
           {
             "Key": { "Ref": "EC2TagKey" },

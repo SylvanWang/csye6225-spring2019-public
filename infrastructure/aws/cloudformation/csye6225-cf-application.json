@@ -66,22 +66,76 @@
                 "chmod +x ./install",
                 "sudo ./install auto",
                 "sudo service codedeploy-agent start",
-
                 "cd /etc/profile.d/",
                 "sudo touch webappEnv.sh",
                 "sudo chmod 777 webappEnv.sh",
                 "echo '#!/bin/bash' >> webappEnv.sh",
-                { "Fn::Sub" : ["echo export DB_NAME=${DatabaseName} >> webappEnv.sh", { "DatabaseName" : {"Ref" : "DBName" }}]},
-                { "Fn::Sub" : ["echo export USER_NAME=${DatabaseUser} >> webappEnv.sh", { "DatabaseUser" : {"Ref" : "DBUser" }}]},
-                { "Fn::Sub" : ["echo export PASS=${DatabasePass} >> webappEnv.sh", { "DatabasePass" : {"Ref" : "DBPassword" }}]},
-                { "Fn::Sub" : ["echo export DB_HOST=${DatabaseHost} >> webappEnv.sh", { "DatabaseHost" : {"Fn::GetAtt": ["myRDSInstance","Endpoint.Address"]}}]},
-                { "Fn::Sub" : ["echo export PORT=${ApplicationPort} >> webappEnv.sh", { "ApplicationPort" : {"Ref" : "Appport" }}]},
-                { "Fn::Sub" : ["echo export S3BUCKET=${S3BUCKET} >> webappEnv.sh", { "S3BUCKET" : {"Ref":"myS3Bucket"}}]},
+                {
+                  "Fn::Sub": [
+                    "echo export DB_NAME=${DatabaseName} >> webappEnv.sh",
+                    {
+                      "DatabaseName": {
+                        "Ref": "DBName"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "echo export USER_NAME=${DatabaseUser} >> webappEnv.sh",
+                    {
+                      "DatabaseUser": {
+                        "Ref": "DBUser"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "echo export PASS=${DatabasePass} >> webappEnv.sh",
+                    {
+                      "DatabasePass": {
+                        "Ref": "DBPassword"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "echo export DB_HOST=${DatabaseHost} >> webappEnv.sh",
+                    {
+                      "DatabaseHost": {
+                        "Fn::GetAtt": [
+                          "myRDSInstance",
+                          "Endpoint.Address"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "echo export PORT=${ApplicationPort} >> webappEnv.sh",
+                    {
+                      "ApplicationPort": {
+                        "Ref": "Appport"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "echo export S3BUCKET=${S3BUCKET} >> webappEnv.sh",
+                    {
+                      "S3BUCKET": {
+                        "Ref": "myS3Bucket"
+                      }
+                    }
+                  ]
+                },
                 "echo export NODE_ENV=dev >> webappEnv.sh",
-
                 "sudo groupadd nodeUser",
                 "sudo useradd -M -s /bin/nologin -g nodeUser -d /webapp nodeUser",
-
                 "cd /etc/systemd/system/",
                 "sudo touch nodeserver.service",
                 "sudo chmod 777 nodeserver.service",
@@ -94,12 +148,69 @@
                 "sudo echo User=nodeUser >> nodeserver.service",
                 "sudo echo RestartSec=10 >> nodeserver.service",
                 "sudo echo Restart=on-failure >> nodeserver.service",
-                { "Fn::Sub" : ["sudo echo Environment=PORT=${ApplicationPort} >> nodeserver.service", { "ApplicationPort" : {"Ref" : "Appport" }}]},
-                { "Fn::Sub" : ["sudo echo Environment=DB_NAME=${DatabaseName} >> nodeserver.service", { "DatabaseName" : {"Ref" : "DBName" }}]},
-                { "Fn::Sub" : ["sudo echo Environment=USER_NAME=${DatabaseUser} >> nodeserver.service", { "DatabaseUser" : {"Ref" : "DBUser" }}]},
-                { "Fn::Sub" : ["sudo echo Environment=PASS=${DatabasePass} >> nodeserver.service", { "DatabasePass" : {"Ref" : "DBPassword" }}]},
-                { "Fn::Sub" : ["sudo echo Environment=DB_HOST=${DatabaseHost} >> nodeserver.service", { "DatabaseHost" : {"Fn::GetAtt": ["myRDSInstance","Endpoint.Address"]}}]},
-                { "Fn::Sub" : ["sudo echo Environment=S3BUCKET=${S3BUCKET} >> nodeserver.service", { "S3BUCKET" : {"Ref":"myS3Bucket"}}]},
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=PORT=${ApplicationPort} >> nodeserver.service",
+                    {
+                      "ApplicationPort": {
+                        "Ref": "Appport"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=DB_NAME=${DatabaseName} >> nodeserver.service",
+                    {
+                      "DatabaseName": {
+                        "Ref": "DBName"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=USER_NAME=${DatabaseUser} >> nodeserver.service",
+                    {
+                      "DatabaseUser": {
+                        "Ref": "DBUser"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=PASS=${DatabasePass} >> nodeserver.service",
+                    {
+                      "DatabasePass": {
+                        "Ref": "DBPassword"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=DB_HOST=${DatabaseHost} >> nodeserver.service",
+                    {
+                      "DatabaseHost": {
+                        "Fn::GetAtt": [
+                          "myRDSInstance",
+                          "Endpoint.Address"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "Fn::Sub": [
+                    "sudo echo Environment=S3BUCKET=${S3BUCKET} >> nodeserver.service",
+                    {
+                      "S3BUCKET": {
+                        "Ref": "myS3Bucket"
+                      }
+                    }
+                  ]
+                },
                 "sudo echo 'ExecStart=/usr/bin/node www' >> nodeserver.service",
                 "sudo echo '[Install]' >> nodeserver.service",
                 "sudo echo 'WantedBy=multi-user.target' >> nodeserver.service",
@@ -217,7 +328,7 @@
         "AllocatedStorage": "100"
       }
     },
-   "myDynamoDB": {
+    "myDynamoDB": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
         "AttributeDefinitions": [
@@ -289,6 +400,9 @@
         "ManagedPolicyArns": [
           {
             "Ref": "CloudWatchAgentServerPolicyARN"
+          },
+          {
+            "Ref": "AmazonSNSFullAccess"
           }
         ],
         "AssumeRolePolicyDocument": {
@@ -309,151 +423,158 @@
         }
       }
     },
-      "CircleCICodeDeploy": {
-        "Type": "AWS::IAM::ManagedPolicy",
-        "Properties": {
-          "ManagedPolicyName": "CircleCI-Code-Deploy",
-          "PolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "codedeploy:RegisterApplicationRevision",
-                  "codedeploy:GetApplicationRevision"
-                ],
-                "Resource": [
-                  {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:aws:codedeploy:",
-                        {
-                          "Ref": "AWSREGION"
-                        },":",
-                        {
-                          "Ref": "AWSACCOUNTID"
-                        },
-                        ":application:",
-                        {
-                          "Ref": "ApplicationName"
-                        }
-                      ]
-                    ]
-                  }
-                ]
-              },
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "codedeploy:CreateDeployment",
-                  "codedeploy:GetDeployment"
-                ],
-                "Resource": [
-                  "*"
-                ]
-              },
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "codedeploy:GetDeploymentConfig"
-                ],
-                "Resource": [
-                  {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:aws:codedeploy:",
-                        {
-                          "Ref": "AWSREGION"
-                        },":",
-                        {
-                          "Ref": "AWSACCOUNTID"
-                        },
-                        ":deploymentconfig:CodeDeployDefault.OneAtATime"
-                      ]
-                    ]
-                  },
-                  {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:aws:codedeploy:",
-                        {
-                          "Ref": "AWSREGION"
-                        },":",
-                        {
-                          "Ref": "AWSACCOUNTID"
-                        },
-                        ":deploymentconfig:CodeDeployDefault.HalfAtATime"
-                      ]
-                    ]
-                  },
-                  {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:aws:codedeploy:",
-                        {
-                          "Ref": "AWSREGION"
-                        },":",
-                        {
-                          "Ref": "AWSACCOUNTID"
-                        },
-                        ":deploymentconfig:CodeDeployDefault.AllAtOnce"
-                      ]
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          "Users": ["circleci"],
-          "Roles": [
+    "CircleCICodeDeploy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "CircleCI-Code-Deploy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
             {
-              "Ref": "CodeDeployEC2ServiceRole"
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:RegisterApplicationRevision",
+                "codedeploy:GetApplicationRevision"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:",
+                      {
+                        "Ref": "AWSREGION"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWSACCOUNTID"
+                      },
+                      ":application:",
+                      {
+                        "Ref": "ApplicationName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:CreateDeployment",
+                "codedeploy:GetDeployment"
+              ],
+              "Resource": [
+                "*"
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:GetDeploymentConfig"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:",
+                      {
+                        "Ref": "AWSREGION"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWSACCOUNTID"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.OneAtATime"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:",
+                      {
+                        "Ref": "AWSREGION"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWSACCOUNTID"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.HalfAtATime"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:",
+                      {
+                        "Ref": "AWSREGION"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWSACCOUNTID"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.AllAtOnce"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
-        }
-      },
-      
+        },
+        "Users": [
+          "circleci"
+        ],
+        "Roles": [
+          {
+            "Ref": "CodeDeployEC2ServiceRole"
+          }
+        ]
+      }
+    },
     "CodeDeployApplication": {
-        "Type": "AWS::CodeDeploy::Application",
-        "Properties": {
-        "ApplicationName" : "csye6225-webapp",
-          "ComputePlatform": "Server"
-        }
+      "Type": "AWS::CodeDeploy::Application",
+      "Properties": {
+        "ApplicationName": "csye6225-webapp",
+        "ComputePlatform": "Server"
+      }
     },
     "CodeDeployDeploymentGroup": {
-      "Type" : "AWS::CodeDeploy::DeploymentGroup",
-      "Properties" : {
-        "ApplicationName" : "csye6225-webapp",
-        "AutoRollbackConfiguration": { 
-                 "Enabled": true,
-                 "Events": ["DEPLOYMENT_FAILURE"]
-               },
-
-        "DeploymentConfigName" : "CodeDeployDefault.AllAtOnce",
-        "DeploymentGroupName" : "csye6225-webapp-deployment",
-        "DeploymentStyle" : {
-        "DeploymentType": "IN_PLACE",
-        "DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
+      "Type": "AWS::CodeDeploy::DeploymentGroup",
+      "Properties": {
+        "ApplicationName": "csye6225-webapp",
+        "AutoRollbackConfiguration": {
+          "Enabled": true,
+          "Events": [
+            "DEPLOYMENT_FAILURE"
+          ]
         },
-        "Ec2TagFilters" : [{
+        "DeploymentConfigName": "CodeDeployDefault.AllAtOnce",
+        "DeploymentGroupName": "csye6225-webapp-deployment",
+        "DeploymentStyle": {
+          "DeploymentType": "IN_PLACE",
+          "DeploymentOption": "WITHOUT_TRAFFIC_CONTROL"
+        },
+        "Ec2TagFilters": [
+          {
             "Key": {
               "Ref": "EC2TagKey"
-             },
+            },
             "Value": {
               "Ref": "EC2TagValue"
-             },
-            "Type" : "KEY_AND_VALUE"
-          }       
+            },
+            "Type": "KEY_AND_VALUE"
+          }
         ],
-        "ServiceRoleArn" : {
-             "Fn::GetAtt": [
-               "CodeDeployServiceRole",
-                "Arn"
-              ]
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "CodeDeployServiceRole",
+            "Arn"
+          ]
         }
       }
     },
@@ -486,31 +607,157 @@
       }
     },
     "CircleCIUploadToS3": {
-        "Type": "AWS::IAM::ManagedPolicy",
-        "Properties": {
-          "ManagedPolicyName": "CircleCI-Upload-To-S3",
-          "PolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "s3:PutObject"
-                ],
-                "Resource": [
-                  "*"
-                ]
-              }
-            ]
-          },
-          "Users": ["circleci"],
-          "Roles": [
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "CircleCI-Upload-To-S3",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
             {
-              "Ref": "CodeDeployEC2ServiceRole"
+              "Effect": "Allow",
+              "Action": [
+                "s3:PutObject"
+              ],
+              "Resource": [
+                "*"
+              ]
             }
+          ]
+        },
+        "Users": [
+          "circleci"
+        ],
+        "Roles": [
+          {
+            "Ref": "CodeDeployEC2ServiceRole"
+          }
+        ]
+      }
+    },
+    "AWSLambdaExecute": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "AWSLambdaExecute3",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:UpdateFunctionCode"
+              ],
+              "Resource": "*"
+            }
+          ]
+        },
+        "Users": [
+          "circleci"
+        ],
+        "Roles": [
+          {
+            "Ref": "CodeDeployEC2ServiceRole"
+          }
+        ]
+      }
+    },
+    "PasswordResetSNSTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "TopicName": "password_reset",
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::GetAtt": [
+                "LambdaEmailApplication",
+                "Arn"
+              ]
+            },
+            "Protocol": "lambda"
+          }
+        ]
+      }
+    },
+    "LambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "Principal": "sns.amazonaws.com",
+        "SourceArn": {
+          "Ref": "PasswordResetSNSTopic"
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaEmailApplication",
+            "Arn"
           ]
         }
       }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess",
+          "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonSESFullAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        ]
+      }
+    },
+    "LambdaEmailApplication": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "  var responseData = 5;",
+                "  response.send(event, context, response.SUCCESS, responseData);",
+                "};"
+              ]
+            ]
+          }
+        },
+        "Description": "A lambda function for reset password email service",
+        "FunctionName": {
+          "Ref": "LambdaFuntionName"
+        },
+        "Handler": {
+          "Ref": "LambdaFuntionHandlerName"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "Runtime": {
+          "Ref": "LambdaFuntionRuntime"
+        },
+        "Timeout": 10
+      }
+    }
   },
   "Parameters": {
     "imageId": {
@@ -573,6 +820,10 @@
       "Type": "String",
       "Default": "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
     },
+    "AmazonSNSFullAccess": {
+      "Type": "String",
+      "Default": "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+    },
     "Appport" : {
       "Type" : "Number",
       "Default" : "3000"
@@ -588,6 +839,22 @@
     "ApplicationName": {
         "Type": "String",
         "Default": "csye6225-webapp"
+    },
+    "S3AppZipKey": {
+      "Type": "String",
+      "Default": "csye6225-reset-email-service.zip"
+    },
+    "LambdaFuntionName": {
+      "Type": "String",
+      "Default": "default-name"
+    },
+    "LambdaFuntionHandlerName": {
+      "Type": "String",
+      "Default": "default-handler"
+    },
+    "LambdaFuntionRuntime": {
+      "Type": "String",
+      "Default": "default-runtime"
     }
   }
 }

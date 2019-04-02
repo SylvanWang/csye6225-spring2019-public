@@ -217,7 +217,7 @@
             "PropagateAtLaunch": "true"
           }
         ],
-        "VPCZoneIdentifier": [{ "Ref": "privateSubnetId11" }, { "Ref": "privateSubnetId2" }]
+        "VPCZoneIdentifier": [{ "Ref": "privateSubnetId1" }, { "Ref": "privateSubnetId2" }]
       }
     },
     "WebServerScaleUpPolicy": {
@@ -267,7 +267,7 @@
         "Statistic": "Average",
         "Period": "300",
         "EvaluationPeriods": "2",
-        "Threshold": "8",
+        "Threshold": "5",
         "AlarmActions": [{ "Ref": "WebServerScaleDownPolicy" }],
         "Dimensions": [
           {

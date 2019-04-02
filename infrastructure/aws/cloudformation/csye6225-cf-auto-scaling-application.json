@@ -210,6 +210,10 @@
         "MaxSize": "10",
         "MinSize": "3",
         "DesiredCapacity": "3",
+        "TargetGroupARNs":{
+        "Type": "forward",
+        "TargetGroupArn": { "Ref": "ALBTargetGroup" }
+},
         "Tags": [
           {
             "Key": { "Ref": "EC2TagKey" },
@@ -318,7 +322,7 @@
         "UnhealthyThresholdCount": 3,
         "VpcId": { "Ref": "vpcId" },
         "Name": "TargetGrpLB",
-        "TargetType": "t2.micro",
+        "TargetType": "instance",
         "HealthCheckPort": 3000
       }
     },
@@ -445,7 +449,7 @@
           "Ref": "DBPassword"
         },
         "DBSubnetGroupName": "Subnet for RDS instances",
-        "PubliclyAccessible": "true",
+        "PubliclyAccessible": "false",
         "DBName": {
           "Ref": "DBName"
         },

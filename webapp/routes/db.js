@@ -22,7 +22,7 @@ pool.query(sqltable1, function (err, result) {
     console.log("Table created!");
 });
 
-var sqltable2 = 'create table if not exists notes(id VARCHAR(100) not null, content VARCHAR(45), title VARCHAR(45), createdOn VARCHAR(45), lastUpdatedOn VARCHAR(45), creator_id VARCHAR(45) not null, constraint pk_example primary key (id))';
+var sqltable2 = 'create table if not exists notes(id VARCHAR(100) not null, content VARCHAR(250), title VARCHAR(250), createdOn VARCHAR(45), lastUpdatedOn VARCHAR(45), creator_id VARCHAR(45) not null, constraint pk_example primary key (id))';
 pool.query(sqltable2, function (err, result) {
     if (err) {
         console.log('[CREATE TABLE ERROR] - ', err.message);

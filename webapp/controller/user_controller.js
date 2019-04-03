@@ -338,11 +338,12 @@ getAttachments = (req, res) => {
 };
 
 resetPassword = (req, res) => {
-    if (req.params.email) {
-        DB.searchUser(req.params.email)
+    var email = req.body.email;
+    if (email) {
+        DB.searchUser(email)
             .then(function (data) {
                 if (data) {
-                    awsService.triggerSNSservice(req.params.email).then((result)=> {
+                    awsService.triggerSNSservice(email).then((result)=> {
                         res.status(200).send({status: 200, message: result});
                     }).catch((err)=> {
                         res.status(401).send({status: 401, message: err});

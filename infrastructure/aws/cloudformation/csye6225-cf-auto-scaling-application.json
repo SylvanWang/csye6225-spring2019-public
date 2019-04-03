@@ -267,7 +267,7 @@
           {
             "Type": "ByteMatch",
             "Negated": false,
-            "DataId": {  "Ref" : "wafrXSSSet" }
+            "DataId": {  "Ref" : "wafrPathsStringSet" }
           }
         ]
       }
@@ -749,6 +749,13 @@
             "RuleId": {  "Ref" : "wafrAdminAccessRule" }
           }
         ]
+      }
+    },
+    "ACLAssociation": {
+      "Type": "AWS::WAFRegional::WebACLAssociation",
+      "Properties": {
+        "ResourceArn": { "Ref": "myApplicationLoadBalencer" },
+        "WebACLId": { "Ref": "wafrOwaspACL" }
       }
     },
     "EC2ServiceRole": {

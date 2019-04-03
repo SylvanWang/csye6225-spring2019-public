@@ -353,7 +353,7 @@ resetPassword = (req, res) => {
                 }
             })
             .catch(function (error) {
-                res.status(400).send({status: 400, message: error});
+                res.status(400).send({status: 400, message: "The email address is not registered."});
             });
     } else {
         res.set('WWW-Authenticate', 'Basic');

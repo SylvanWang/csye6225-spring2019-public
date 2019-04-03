@@ -27,6 +27,8 @@ echo "$ApplicationName"
 RoleArn="arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 echo "$RoleArn"
 
+Targets = $()
+
 SSLCertificateArn=$(aws acm list-certificates --certificate-statuses ISSUED | jq -r '.CertificateSummaryList[0].CertificateArn')
 
 if [ ! -z "$domainName" ]

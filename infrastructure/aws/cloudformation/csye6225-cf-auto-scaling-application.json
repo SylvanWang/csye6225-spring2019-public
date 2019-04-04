@@ -483,24 +483,9 @@
         ]
       }
     },
-    "wafrCSRFTokenSizeConstraint": {
-      "Type": "AWS::WAFRegional::SizeConstraintSet",
-      "Properties": {
-        "Name": "wafrCSRFTokenSizeConstraint"
-      }
-    },
     "wafrCSRFRule": {
       "Type": "AWS::WAFRegional::Rule",
       "Properties": {
-        "MetricName": "wafrCSRFRule",
-        "Name": "wafrCSRFRule",
-        "Predicates": [
-          {
-            "Type": "SizeConstraint",
-            "Negated": true,
-            "DataId": {  "Ref" : "wafrCSRFTokenSizeConstraint" }
-          }
-        ]
       }
     },
     "wafrServerSideIncludeStringSet": {

@@ -147,12 +147,6 @@
             "FieldToMatch": {
               "Type": "BODY"
             },
-            "TextTransformation": "URL_DECODE"
-          },
-          {
-            "FieldToMatch": {
-              "Type": "BODY"
-            },
             "TextTransformation": "HTML_ENTITY_DECODE"
           },
           {

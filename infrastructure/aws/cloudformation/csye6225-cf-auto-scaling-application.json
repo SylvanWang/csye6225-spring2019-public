@@ -485,8 +485,6 @@
     },
     "wafrCSRFRule": {
       "Type": "AWS::WAFRegional::Rule",
-      "Properties": {
-      }
     },
     "wafrServerSideIncludeStringSet": {
       "Type": "AWS::WAFRegional::ByteMatchSet",

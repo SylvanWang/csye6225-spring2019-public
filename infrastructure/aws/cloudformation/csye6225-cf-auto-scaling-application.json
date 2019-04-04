@@ -970,7 +970,7 @@
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
         "Period": "300",
-        "EvaluationPeriods": "2",
+        "EvaluationPeriods": "1",
         "Threshold": "10",
         "AlarmActions": [{ "Ref": "WebServerScaleUpPolicy" }],
         "Dimensions": [

@@ -102,11 +102,13 @@ function createNote(req, res) {
     if (req.body !== undefined && res.locals !== undefined) {
         let idPromise = DB.getIdByUsername(res.locals.user);
         idPromise.then(function (id) {
-            let promise = DB.createNote(uuid(),
+            let noteId = uuid();
+            let promise = DB.createNote(noteId,
                 req.body.content, req.body.title, currentDate, currentDate, id);
             promise.then(function (value) {
+                console.log(value);
                 if (value) {
-                    res.status(200).json({status: 200, message: 'Note created: ' + req.body.title});
+                    res.status(200).json({status: 200, noteId: noteId, message: 'Note created: ' + req.body.title});
                 } else {
                     res.status(400).json({status: 400, message: 'Failed to create note'});
                 }
@@ -184,7 +186,7 @@ function createUser(req, res) {
                     promise.then(function (value) {
                         if (value) {
                             console.log('insert success!');
-                            res.status(200).send({status: 200, message: "User created"});
+                            res.status(200).send({status: 200, username: username, message: "User created"});
                         } else {
                             console.log('insert fail!');
                             res.status(400).send({status: 400, message: "Failed to create user"});
@@ -336,11 +338,12 @@ getAttachments = (req, res) => {
 };
 
 resetPassword = (req, res) => {
-    if (req.params.email) {
-        DB.searchUser(req.params.email)
+    var email = req.body.email;
+    if (email) {
+        DB.searchUser(email)
             .then(function (data) {
                 if (data) {
-                    awsService.triggerSNSservice(req.params.email).then((result)=> {
+                    awsService.triggerSNSservice(email).then((result)=> {
                         res.status(200).send({status: 200, message: result});
                     }).catch((err)=> {
                         res.status(401).send({status: 401, message: err});
@@ -350,7 +353,7 @@ resetPassword = (req, res) => {
                 }
             })
             .catch(function (error) {
-                res.status(400).send({status: 400, message: error});
+                res.status(400).send({status: 400, message: "The email address is not registered."});
             });
     } else {
         res.set('WWW-Authenticate', 'Basic');

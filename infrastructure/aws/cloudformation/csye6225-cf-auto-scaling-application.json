@@ -455,7 +455,7 @@
             },
             "TextTransformation": "NONE",
             "ComparisonOperator": "GT",
-            "Size": "4096"
+            "Size": "2000000"
           },
           {
             "FieldToMatch": {
@@ -483,22 +483,6 @@
         ]
       }
     },
-    "wafrCSRFMethodStringSet": {
-      "Type": "AWS::WAFRegional::ByteMatchSet",
-      "Properties": {
-        "Name": "wafrCSRFMethodStringSet",
-        "ByteMatchTuples": [
-          {
-            "FieldToMatch": {
-              "Type": "METHOD"
-            },
-            "PositionalConstraint": "EXACTLY",
-            "TargetString": "post",
-            "TextTransformation": "LOWERCASE"
-          }
-        ]
-      }
-    },
     "wafrCSRFTokenSizeConstraint": {
       "Type": "AWS::WAFRegional::SizeConstraintSet",
       "Properties": {
@@ -522,11 +506,6 @@
         "MetricName": "wafrCSRFRule",
         "Name": "wafrCSRFRule",
         "Predicates": [
-          {
-            "Type": "ByteMatch",
-            "Negated": false,
-            "DataId": {  "Ref" : "wafrCSRFMethodStringSet" }
-          },
           {
             "Type": "SizeConstraint",
             "Negated": true,
@@ -1115,24 +1094,6 @@
           "Ref": "vpcId"
         },
         "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 22,
-            "ToPort": 22,
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 80,
-            "ToPort": 80,
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 443,
-            "ToPort": 443,
-            "CidrIp": "0.0.0.0/0"
-          },
           {
             "IpProtocol": "tcp",
             "FromPort": 3000,

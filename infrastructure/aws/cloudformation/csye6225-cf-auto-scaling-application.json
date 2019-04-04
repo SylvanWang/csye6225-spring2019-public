@@ -486,18 +486,7 @@
     "wafrCSRFTokenSizeConstraint": {
       "Type": "AWS::WAFRegional::SizeConstraintSet",
       "Properties": {
-        "Name": "wafrCSRFTokenSizeConstraint",
-        "SizeConstraints": [
-          {
-            "FieldToMatch": {
-              "Type": "HEADER",
-              "Data": "x-csrf-token"
-            },
-            "TextTransformation": "NONE",
-            "ComparisonOperator": "EQ",
-            "Size": "36"
-          }
-        ]
+        "Name": "wafrCSRFTokenSizeConstraint"
       }
     },
     "wafrCSRFRule": {

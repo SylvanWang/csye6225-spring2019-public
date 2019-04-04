@@ -486,6 +486,7 @@
     "wafrCSRFRule": {
       "Type": "AWS::WAFRegional::Rule",
       "Properties": {
+        "MetricName": "wafrCSRFRule",
         "Name": "wafrCSRFRule"
       }
        },

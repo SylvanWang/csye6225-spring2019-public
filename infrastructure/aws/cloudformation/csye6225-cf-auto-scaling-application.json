@@ -455,7 +455,7 @@
             },
             "TextTransformation": "NONE",
             "ComparisonOperator": "GT",
-            "Size": "4096"
+            "Size": "2000000"
           },
           {
             "FieldToMatch": {
@@ -483,58 +483,13 @@
         ]
       }
     },
-    "wafrCSRFMethodStringSet": {
-      "Type": "AWS::WAFRegional::ByteMatchSet",
-      "Properties": {
-        "Name": "wafrCSRFMethodStringSet",
-        "ByteMatchTuples": [
-          {
-            "FieldToMatch": {
-              "Type": "METHOD"
-            },
-            "PositionalConstraint": "EXACTLY",
-            "TargetString": "post",
-            "TextTransformation": "LOWERCASE"
-          }
-        ]
-      }
-    },
-    "wafrCSRFTokenSizeConstraint": {
-      "Type": "AWS::WAFRegional::SizeConstraintSet",
-      "Properties": {
-        "Name": "wafrCSRFTokenSizeConstraint",
-        "SizeConstraints": [
-          {
-            "FieldToMatch": {
-              "Type": "HEADER",
-              "Data": "x-csrf-token"
-            },
-            "TextTransformation": "NONE",
-            "ComparisonOperator": "EQ",
-            "Size": "36"
-          }
-        ]
-      }
-    },
     "wafrCSRFRule": {
       "Type": "AWS::WAFRegional::Rule",
       "Properties": {
         "MetricName": "wafrCSRFRule",
-        "Name": "wafrCSRFRule",
-        "Predicates": [
-          {
-            "Type": "ByteMatch",
-            "Negated": false,
-            "DataId": {  "Ref" : "wafrCSRFMethodStringSet" }
-          },
-          {
-            "Type": "SizeConstraint",
-            "Negated": true,
-            "DataId": {  "Ref" : "wafrCSRFTokenSizeConstraint" }
-          }
-        ]
+        "Name": "wafrCSRFRule"
       }
-    },
+       },
     "wafrServerSideIncludeStringSet": {
       "Type": "AWS::WAFRegional::ByteMatchSet",
       "Properties": {
@@ -1002,7 +957,7 @@
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
         "Period": "300",
-        "EvaluationPeriods": "2",
+        "EvaluationPeriods": "1",
         "Threshold": "10",
         "AlarmActions": [{ "Ref": "WebServerScaleUpPolicy" }],
         "Dimensions": [
@@ -1115,24 +1070,6 @@
           "Ref": "vpcId"
         },
         "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 22,
-            "ToPort": 22,
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 80,
-            "ToPort": 80,
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 443,
-            "ToPort": 443,
-            "CidrIp": "0.0.0.0/0"
-          },
           {
             "IpProtocol": "tcp",
             "FromPort": 3000,

@@ -919,6 +919,9 @@
         "TargetGroupARNs":[
           {
             "Ref": "ALBTargetGroup"
+          },
+          {
+            "Ref": "ALBTargetGroup1"
           }
         ],
         "Tags": [
@@ -1649,7 +1652,18 @@
               "HostedZoneId" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "CanonicalHostedZoneID"] },
               "DNSName" : { "Fn::GetAtt" : ["myApplicationLoadBalencer", "DNSName"] }
             }
-          },
+          }
+        ]
+      }
+    },
+    "Route53RecordSetGroup1" : {
+      "Type" : "AWS::Route53::RecordSetGroup",
+      "Properties" : {
+        "HostedZoneName" : {
+          "Ref": "NOAWFDomainName"
+        },
+        "Comment" : "Zone apex alias targeted to Application Load Balancer.",
+        "RecordSets" : [
           {
             "Name" : {
               "Ref": "NOAWFDomainName"

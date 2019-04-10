@@ -956,7 +956,7 @@
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
-        "Period": "300",
+        "Period": "60",
         "EvaluationPeriods": "1",
         "Threshold": "10",
         "AlarmActions": [{ "Ref": "WebServerScaleUpPolicy" }],
@@ -976,9 +976,9 @@
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
-        "Period": "300",
-        "EvaluationPeriods": "2",
-        "Threshold": "5",
+        "Period": "60",
+        "EvaluationPeriods": "1",
+        "Threshold": "8",
         "AlarmActions": [{ "Ref": "WebServerScaleDownPolicy" }],
         "Dimensions": [
           {

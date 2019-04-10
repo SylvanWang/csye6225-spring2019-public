@@ -1422,6 +1422,11 @@
             "DEPLOYMENT_FAILURE"
           ]
         },
+        "AutoScalingGroups": [
+          {
+            "Ref": "AutoScalingGroup"
+          }
+        ],
         "DeploymentConfigName": "CodeDeployDefault.AllAtOnce",
         "DeploymentGroupName": "csye6225-webapp-deployment",
         "DeploymentStyle": {

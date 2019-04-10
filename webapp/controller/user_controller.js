@@ -179,7 +179,7 @@ function createUser(req, res) {
             promise.then(function (value) {
                 if (value) {
                     console.log('search success!');
-                    return res.status(400).send("User exists");
+                    return res.status(400).send({status: 400, message: "User exists"});
                 } else {
                     console.log('search fail');
                     var promise = DB.createUser(username, password);

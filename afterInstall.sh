@@ -5,6 +5,7 @@ sudo pkill node
 sudo systemctl daemon-reload
 cd webapp
 npm install
+sh /etc/profile.d/webappEnv.sh
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
     -a fetch-config \

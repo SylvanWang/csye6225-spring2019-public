@@ -42,6 +42,7 @@ then
                         ParameterKey=AWSACCOUNTID,ParameterValue=$AWS_ACCOUNT_ID \
                         ParameterKey=DBport,ParameterValue="3306"\
                         ParameterKey=DomainName,ParameterValue=$domainName \
+                        ParameterKey=NOAWFDomainName,ParameterValue="nowaf."$domainName \
                         ParameterKey=S3AppZipKey,ParameterValue="myLambda.zip" \
                         ParameterKey=LambdaFuntionName,ParameterValue="passwordResetService" \
                         ParameterKey=LambdaFuntionHandlerName,ParameterValue="index.handler" \

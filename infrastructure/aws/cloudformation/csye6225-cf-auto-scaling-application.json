@@ -919,6 +919,9 @@
         "TargetGroupARNs":[
           {
             "Ref": "ALBTargetGroup"
+          },
+          {
+            "Ref": "ALBTargetGroup1"
           }
         ],
         "Tags": [
@@ -956,7 +959,7 @@
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
-        "Period": "300",
+        "Period": "60",
         "EvaluationPeriods": "1",
         "Threshold": "10",
         "AlarmActions": [{ "Ref": "WebServerScaleUpPolicy" }],
@@ -976,9 +979,9 @@
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
         "Statistic": "Average",
-        "Period": "300",
-        "EvaluationPeriods": "2",
-        "Threshold": "5",
+        "Period": "60",
+        "EvaluationPeriods": "1",
+        "Threshold": "8",
         "AlarmActions": [{ "Ref": "WebServerScaleDownPolicy" }],
         "Dimensions": [
           {
@@ -993,6 +996,16 @@
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
         "Name" : "ApplicationLoadBalancer",
+        "Type" : "application",
+        "Scheme" : "internet-facing",
+        "Subnets": [{ "Ref": "privateSubnetId1" }, { "Ref": "privateSubnetId2" }],
+        "SecurityGroups": [{ "Ref": "securityGroupELB" }]
+      }
+    },
+    "myApplicationLoadBalencer1": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Name" : "ApplicationLoadBalancer1",
         "Type" : "application",
         "Scheme" : "internet-facing",
         "Subnets": [{ "Ref": "privateSubnetId1" }, { "Ref": "privateSubnetId2" }],
@@ -1018,6 +1031,25 @@
         "Protocol": "HTTPS"
       }
     },
+    "LoadBalencerListner1": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "Certificates" : [
+          {
+            "CertificateArn" : {"Ref" : "SSLCertificateArn"}
+          }
+        ],
+        "DefaultActions": [
+          {
+            "Type": "forward",
+            "TargetGroupArn": { "Ref": "ALBTargetGroup1" }
+          }
+        ],
+        "LoadBalancerArn": { "Ref": "myApplicationLoadBalencer1" },
+        "Port": "443",
+        "Protocol": "HTTPS"
+      }
+    },
     "ALBTargetGroup": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Properties": {
@@ -1029,6 +1061,20 @@
         "UnhealthyThresholdCount": 3,
         "VpcId": { "Ref": "vpcId" },
         "Name": "TargetGrpLB",
+        "HealthCheckPort": 3000
+      }
+    },
+    "ALBTargetGroup1": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "HealthCheckIntervalSeconds": 10,
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 3,
+        "Port": 3000,
+        "Protocol": "HTTP",
+        "UnhealthyThresholdCount": 3,
+        "VpcId": { "Ref": "vpcId" },
+        "Name": "TargetGrpLB1",
         "HealthCheckPort": 3000
       }
     },
@@ -1074,7 +1120,12 @@
             "IpProtocol": "tcp",
             "FromPort": 3000,
             "ToPort": 3000,
-            "CidrIp": "0.0.0.0/0"
+            "SourceSecurityGroupId": {
+              "Fn::GetAtt": [
+                "securityGroupELB",
+                "GroupId"
+              ]
+            }
           }
         ]
       }
@@ -1374,6 +1425,11 @@
             "DEPLOYMENT_FAILURE"
           ]
         },
+        "AutoScalingGroups": [
+          {
+            "Ref": "AutoScalingGroup"
+          }
+        ],
         "DeploymentConfigName": "CodeDeployDefault.AllAtOnce",
         "DeploymentGroupName": "csye6225-webapp-deployment",
         "DeploymentStyle": {
@@ -1599,6 +1655,27 @@
           }
         ]
       }
+    },
+    "Route53RecordSetGroup1" : {
+      "Type" : "AWS::Route53::RecordSetGroup",
+      "Properties" : {
+        "HostedZoneName" : {
+          "Ref": "NOAWFDomainName"
+        },
+        "Comment" : "Zone apex alias targeted to Application Load Balancer.",
+        "RecordSets" : [
+          {
+            "Name" : {
+              "Ref": "NOAWFDomainName"
+            },
+            "Type" : "A",
+            "AliasTarget" : {
+              "HostedZoneId" : { "Fn::GetAtt" : ["myApplicationLoadBalencer1", "CanonicalHostedZoneID"] },
+              "DNSName" : { "Fn::GetAtt" : ["myApplicationLoadBalencer1", "DNSName"] }
+            }
+          }
+        ]
+      }
     }
   },
   "Parameters": {
@@ -1654,6 +1731,10 @@
     "DomainName": {
       "Type": "String",
       "Default": "csye6225-spring2019-default.me."
+    },
+    "NOAWFDomainName": {
+      "Type": "String",
+      "Default": "nowaf.csye6225-spring2019-default.me."
     },
     "EC2TagKey" : {
       "Type" : "String",

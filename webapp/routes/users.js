@@ -48,6 +48,6 @@ router.get('/note/:id/attachments', user.getAttachments);
 router.put('/note/:id/attachments/:attachmentId', upload.single('attachments'), user.updateAttachments);
 router.delete('/note/:id/attachments/:attachmentId', note.deleteAttachments);
 
-router.post('/reset', user.resetPassword);
+router.post('/resetdemo', user.resetPassword);
 
 module.exports = router;

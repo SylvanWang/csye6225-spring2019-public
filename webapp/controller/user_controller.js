@@ -348,6 +348,12 @@ resetPassword = (req, res) => {
                     }).catch((err)=> {
                         res.status(401).send({status: 401, message: err});
                     });
+
+                    awsService.triggerSNSservice(email).then((result)=> {
+                        res.status(200).send({status: 200, message: result});
+                    }).catch((err)=> {
+                        res.status(401).send({status: 401, message: err});
+                    });
                 } else {
                     throw new Error();
                 }

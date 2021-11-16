@@ -7,7 +7,7 @@
     "test": "echo Hello, world!"
   },
   "dependencies": {
-    "aws-sdk": "^2.406.0",
+    "aws-sdk": "^2.814.0",
     "basic-auth": "^2.0.1",
     "bcrypt": "^3.0.4",
     "bcryptjs": "^2.4.3",
